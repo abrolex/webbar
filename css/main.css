@@ -1,0 +1,23 @@
+html,body {
+height:100%;
+}
+.gradient-blue {
+background: linear-gradient(135deg, #356aa0 0%,#000000 100%);
+color:#ffffff;
+}
+.blue {
+background-color:#356aa0;
+color:#ffffff;
+}
+.border-blue {
+border-color:#356aa0!important;
+}
+.active:after{
+content:'';
+position:absolute;
+border-right:15px solid transparent;
+border-top:15px solid transparent;
+border-left:15px solid transparent;
+border-bottom:15px solid white;
+display:block;
+}
