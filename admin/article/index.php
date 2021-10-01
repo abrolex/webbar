@@ -12,7 +12,7 @@
 			<div class="w3-center">
 				<div class="w3-bar">
 					<a class="w3-bar-item w3-btn" href="/admin/"><i class="fas fa-home fa-2x"></i></a>
-					<a class="w3-bar-item w3-btn" href="user/"><i class="fas fa-user fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn" href="../user/"><i class="fas fa-user fa-2x"></i></a>
 					<a class="w3-bar-item w3-btn active" href="index.php"><i class="fas fa-cube fa-2x"></i></a>
 				</div>
 			</div>
