@@ -1,18 +1,7 @@
-<?php
-session_start();
-
-session_regenerate_id();
-
-if(empty($_SESSION['admin_login']))
-{
-	header('location:http://'.$_SERVER['HTTP_HOST'].'/admin/login.php');
-	exit;
-}
-?>
 <!DOCTYPE HTML>
 <html lang="de">
 	<head>
-		<title>WebBar | Admin | Artikel</title>
+		<title>WebBar | Admin | User</title>
 		<?php
 		require($_SERVER['DOCUMENT_ROOT'].'/include/head.inc.php');
 		?>
@@ -23,8 +12,8 @@ if(empty($_SESSION['admin_login']))
 			<div class="w3-center">
 				<div class="w3-bar">
 					<a class="w3-bar-item w3-btn" href="/admin/"><i class="fas fa-home fa-2x"></i></a>
-					<a class="w3-bar-item w3-btn" href="../user/"><i class="fas fa-user fa-2x"></i></a>
-					<a class="w3-bar-item w3-btn active" href="index.php"><i class="fas fa-cube fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn active" href="index.php"><i class="fas fa-user fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn" href="../article/"><i class="fas fa-cube fa-2x"></i></a>
 				</div>
 			</div>
 			<div class="w3-container">
@@ -32,7 +21,7 @@ if(empty($_SESSION['admin_login']))
 					<form action="search.php" method="get">
 						<div class="w3-row w3-section">
 							<div class="w3-col s8 m8 l8">
-								<input class="w3-input w3-border" type="text" name="search" placeholder="Artikel suchen"/>
+								<input class="w3-input w3-border" type="text" name="search" placeholder="User suchen"/>
 								<input type="hidden" name="s" value="0"/>
 								<input type="hidden" name="ps" value="5"/>
 							</div>
@@ -41,7 +30,7 @@ if(empty($_SESSION['admin_login']))
 							</div>
 						</div>
 					</form>
-					<p><a class="w3-btn w3-block w3-padding-large blue" href="add.php">Artikel erstellen <i class="fas fa-plus"></i></a></p>
+					<p><a class="w3-btn w3-block w3-padding-large blue" href="add.php">User erstellen <i class="fas fa-plus"></i></a></p>
 				</div>
 			</div>
 		</div>

@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+session_regenerate_id();
+
+if(empty($_SESSION['admin_login']))
+{
+	header('location:http://'.$_SERVER['HTTP_HOST'].'/admin/login.php');
+	exit;
+}
+?>
 <!DOCTYPE HTML>
 <html lang="de">
 	<head>
@@ -18,7 +29,7 @@
 			</div>
 			<div class="w3-container">
 				<div class="w3-panel w3-center w3-white">
-					<h2>WebBar Admin</h2>
+					<h2>WebBarAdmin</h2>
 				</div>
 			</div>
 		</div>

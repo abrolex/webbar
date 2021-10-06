@@ -16,9 +16,9 @@ else
 
 	$showform = 1;
 
-	if(!empty($_GET))
+	if(!empty($_POST))
 	{
-		if(empty($_GET['article_name']) || empty($_GET['article_variant']) || empty($_GET['article_price']) || empty($_GET['article_keywords']))
+		if(empty($_POST['user_email']) empty($_POST['user_username']) || empty($_POST['user_password']))
 		{
 			$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
 			$output .= '<p>Es wurden nicht alle Felder ausgef&uuml;llt.</p>';
@@ -26,60 +26,63 @@ else
 		}
 		else
 		{
-			if(preg_match('/[^a-zA-ZöäüÖÄÜß0-9\s]/',$_GET['article_name']) == 0)
+			if(preg_match('/[^a-zA-Z0-9\-\_\.\@]/',$_POST['user_email']) == 0)
 			{
-				$article_name = $_GET['article_name'];
+				$pos = strpos($_POST['user_email'],'@');
 				
-				if(preg_match('/[^a-zA-ZöäüÖÄÜß0-9\s\/\.]/',$_GET['article_variant']) == 0)
+				if($pos !== false)
 				{
-					$article_variant = $_GET['article_variant'];
+					$email_provider = substr($_POST['user_email'],$pos+1);
 					
-					if(preg_match('/[^0-9\.\/]/',$_GET['article_price']) == 0)
+					if(in_array($email_provider,$app_email_provider))
 					{
-						$article_price = $_GET['article_price'];
-						
-						if(preg_match('/[^a-zA-ZöäüÖÄÜß0-9\s]/',$_GET['article_keywords']) == 0)
+						if(strlen($_POST['user_username']) <= 10)
 						{
-							$article_keywords = $_GET['article_keywords'];
-							
-							$sql = mysqli_connect($app_sqlhost,$app_sqluser,$app_sqlpasswd,$app_sqldb);
-							
-							if(!$sql)
+							if(preg_match('/[^a-zA-Z0-9\_\-]/',$_POST['user_username']) == 0)
 							{
-								$output .= '<div class="w3-panel w3-text-red">';
-								$output .= '<p>Es konnte keine Datenbankverbindung hergestellt werden.</p>';
-								$output .= '</div>';
-							}
-							else
-							{
-								$query = sprintf("
-								INSERT INTO article
-								(article_name,article_variant,article_price,article_keywords)
-								VALUES
-								('%s','%s','%s','%s');",
-								$sql->real_escape_string($article_name),
-								$sql->real_escape_string($article_variant),
-								$sql->real_escape_string($article_price),
-								$sql->real_escape_string($article_keywords));
-								
-								$sql->query($query);
-								
-								if($sql->affected_rows == 1)
+								if(strlen($_POST['user_password']) >= 8)
 								{
-									$showform = 0;
-									
-									$output .= '<div class="w3-panel w3-border w3-border-green w3-text-green">';
-									$output .= '<p>Der Artikel wurde erfolgreich angelegt.</p>';
-									$output .= '</div>';
-									$output .= '<p><a class="w3-btn w3-block w3-padding-large blue" href="add.php">Artikel erstellen <i class="fas fa-plus"></i></a></p>';
-								}
-								else
-								{
-									$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-									$output .= '<p>Der Artikel konnte nicht angelegt werden.</p>';
-									$output .= '</div>';
-								}
-							}
+									if(preg_match('/[A-Z]{1,}/',$_POST['user_password']) != 0 && preg_match('/[0-9]{1,}/',$_POST['user_password']) != 0)
+									{	
+										$sql = mysqli_connect($app_sqlhost,$app_sqluser,$app_sqlpasswd,$app_sqldb);
+										
+										if(!$sql)
+										{
+											$output .= '<div class="w3-panel w3-text-red">';
+											$output .= '<p>Es konnte keine Datenbankverbindung hergestellt werden.</p>';
+											$output .= '</div>';
+										}
+										else
+										{
+											/*
+											$query = sprintf("
+											INSERT INTO article
+											(article_name,article_variant,article_price,article_keywords)
+											VALUES
+											('%s','%s','%s','%s');",
+											$sql->real_escape_string($article_name),
+											$sql->real_escape_string($article_variant),
+											$sql->real_escape_string($article_price),
+											$sql->real_escape_string($article_keywords));
+											
+											$sql->query($query);
+											
+											if($sql->affected_rows == 1)
+											{
+												$showform = 0;
+												
+												$output .= '<div class="w3-panel w3-border w3-border-green w3-text-green">';
+												$output .= '<p>Der Artikel wurde erfolgreich angelegt.</p>';
+												$output .= '</div>';
+												$output .= '<p><a class="w3-btn w3-block w3-padding-large blue" href="add.php">Artikel erstellen <i class="fas fa-plus"></i></a></p>';
+											}
+											else
+											{
+												$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+												$output .= '<p>Der Artikel konnte nicht angelegt werden.</p>';
+												$output .= '</div>';
+											}
+										}
 						}
 						else
 						{
