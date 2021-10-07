@@ -16,7 +16,7 @@ else
 
 	if(!empty($_GET))
 	{
-		if(empty($_GET['article_id']) || empty($_GET['attr']) || empty($_GET['attr_value']))
+		if(empty($_GET['article_id']) || empty($_GET['attr']) || empty($_GET['attr_value']) || empty($_GET['csrf_token']))
 		{
 			$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
 			$output .= '<p>Es konnte kein Artikel ge&auml;ndert werden.</p>';
@@ -30,125 +30,143 @@ else
 				
 				if(in_array($_GET['attr'],$aktions))
 				{
-					$sql = mysqli_connect($app_sqlhost,$app_sqluser,$app_sqlpasswd,$app_sqldb);
-					
-					if(!$sql)
+					if(preg_match('/[^a-zA-Z0-9]/',$_GET['csrf_token']) == 0)
 					{
-						$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-						$output .= '<p>Es konnte keine Datenbankverbindung hergestellt werden.</p>';
-						$output .= '</div>';
-					}
-					else
-					{
-						switch ($_GET['attr'])
+						if($_SESSION['user_csrf_token'] == $_GET['csrf_token'])
 						{
-							case $aktions[0]:	
-						
-								if(preg_match('/[^a-zA-ZöäüÖÄÜß0-9\s]/',$_GET['attr_value']) == 0)
-								{
-									$query = sprintf("
-									UPDATE article
-									SET article_name = '%s'
-									WHERE article_id = '%s';",
-									$sql->real_escape_string($_GET['attr_value']),
-									$sql->real_escape_string($_GET['article_id']));
-									
-									break;
-								}
-								else
-								{
-									$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-									$output .= '<p>Verwenden Sie nur folgende Zeichen f&uuml;r den Artikelname: a-z, A-Z, öäüÖÄÜß, 0-9</p>';
-									$output .= '</div>';
-									
-									break;
-								}
-								
-							case $aktions[1]:
+							$sql = mysqli_connect($app_sqlhost,$app_sqluser,$app_sqlpasswd,$app_sqldb);
 							
-								if(preg_match('/[^a-zA-ZöäüÖÄÜß0-9\s\/\.]/',$_GET['attr_value']) == 0)
-								{
-									$query = sprintf("
-									UPDATE article
-									SET article_variant = '%s'
-									WHERE article_id = '%s';",
-									$sql->real_escape_string($_GET['attr_value']),
-									$sql->real_escape_string($_GET['article_id']));
-									
-									break;
-								}
-								else
-								{
-									$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-									$output .= '<p>Verwenden Sie nur folgende Zeichen f&uuml;r die Varianten: a-z, A-Z, öäüÖÄÜß, 0-9, ./</p>';
-									$output .= '</div>';
-									
-									break;
-								}
-								
-							case $aktions[2]:
-							
-								if(preg_match('/[^0-9\/\.]/',$_GET['attr_value']) == 0)
-								{
-									$query = sprintf("
-									UPDATE article
-									SET article_price = '%s'
-									WHERE article_id = '%s';",
-									$sql->real_escape_string($_GET['attr_value']),
-									$sql->real_escape_string($_GET['article_id']));
-									
-									break;
-								}
-								else
-								{
-									$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-									$output .= '<p>Verwenden Sie nur folgende Zeichen f&uuml;r die Preise: 0-9, ./</p>';
-									$output .= '</div>';
-									
-									break;
-								}
-								
-							case $aktions[3]:
-							
-								if(preg_match('/[^a-zA-ZöäüÖÄÜß0-9\s]/',$_GET['attr_value']) == 0)
-								{
-									$query = sprintf("
-									UPDATE article
-									SET article_keywords = '%s'
-									WHERE article_id = '%s';",
-									$sql->real_escape_string($_GET['attr_value']),
-									$sql->real_escape_string($_GET['article_id']));
-									
-									break;
-								}
-								else
-								{
-									$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-									$output .= '<p>Verwenden Sie nur folgende Zeichen f&uuml;r die Suchbegriffe: a-z, A-Z, öäüÖÄÜß, 0-9</p>';
-									$output .= '</div>';
-									
-									break;
-								}
-						}
-						
-						if(!empty($query))
-						{
-							$sql->query($query);
-							
-							if($sql->affected_rows == 1)
+							if(!$sql)
 							{
-								$output .= '<div class="w3-panel w3-border w3-border-green w3-text-green">';
-								$output .= '<p>Der Artikel wurde erfolgreich gespeichert.</p>';
+								$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+								$output .= '<p>Es konnte keine Datenbankverbindung hergestellt werden.</p>';
 								$output .= '</div>';
 							}
 							else
 							{
-								$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-								$output .= '<p>Der Artikel konnte nicht gespeichert werden.</p>';
-								$output .= '</div>';
+								switch ($_GET['attr'])
+								{
+									case $aktions[0]:	
+								
+										if(preg_match('/[^a-zA-ZöäüÖÄÜß0-9\s]/',$_GET['attr_value']) == 0)
+										{
+											$query = sprintf("
+											UPDATE article
+											SET article_name = '%s'
+											WHERE article_id = '%s';",
+											$sql->real_escape_string($_GET['attr_value']),
+											$sql->real_escape_string($_GET['article_id']));
+											
+											break;
+										}
+										else
+										{
+											$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+											$output .= '<p>Verwenden Sie nur folgende Zeichen f&uuml;r den Artikelname: a-z, A-Z, öäüÖÄÜß, 0-9</p>';
+											$output .= '</div>';
+											
+											break;
+										}
+										
+									case $aktions[1]:
+									
+										if(preg_match('/[^a-zA-ZöäüÖÄÜß0-9\s\/\.]/',$_GET['attr_value']) == 0)
+										{
+											$query = sprintf("
+											UPDATE article
+											SET article_variant = '%s'
+											WHERE article_id = '%s';",
+											$sql->real_escape_string($_GET['attr_value']),
+											$sql->real_escape_string($_GET['article_id']));
+											
+											break;
+										}
+										else
+										{
+											$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+											$output .= '<p>Verwenden Sie nur folgende Zeichen f&uuml;r die Varianten: a-z, A-Z, öäüÖÄÜß, 0-9, ./</p>';
+											$output .= '</div>';
+											
+											break;
+										}
+										
+									case $aktions[2]:
+									
+										if(preg_match('/[^0-9\/\.]/',$_GET['attr_value']) == 0)
+										{
+											$query = sprintf("
+											UPDATE article
+											SET article_price = '%s'
+											WHERE article_id = '%s';",
+											$sql->real_escape_string($_GET['attr_value']),
+											$sql->real_escape_string($_GET['article_id']));
+											
+											break;
+										}
+										else
+										{
+											$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+											$output .= '<p>Verwenden Sie nur folgende Zeichen f&uuml;r die Preise: 0-9, ./</p>';
+											$output .= '</div>';
+											
+											break;
+										}
+										
+									case $aktions[3]:
+									
+										if(preg_match('/[^a-zA-ZöäüÖÄÜß0-9\s]/',$_GET['attr_value']) == 0)
+										{
+											$query = sprintf("
+											UPDATE article
+											SET article_keywords = '%s'
+											WHERE article_id = '%s';",
+											$sql->real_escape_string($_GET['attr_value']),
+											$sql->real_escape_string($_GET['article_id']));
+											
+											break;
+										}
+										else
+										{
+											$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+											$output .= '<p>Verwenden Sie nur folgende Zeichen f&uuml;r die Suchbegriffe: a-z, A-Z, öäüÖÄÜß, 0-9</p>';
+											$output .= '</div>';
+											
+											break;
+										}
+								}
+								
+								if(!empty($query))
+								{
+									$sql->query($query);
+									
+									if($sql->affected_rows == 1)
+									{
+										$output .= '<div class="w3-panel w3-border w3-border-green w3-text-green">';
+										$output .= '<p>Der Artikel wurde erfolgreich gespeichert.</p>';
+										$output .= '</div>';
+									}
+									else
+									{
+										$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+										$output .= '<p>Der Artikel konnte nicht gespeichert werden.</p>';
+										$output .= '</div>';
+									}
+								}
 							}
 						}
+						else
+						{
+							$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+							$output .= '<p>Es wurde ein falscher Token gesendet.</p>';
+							$output .= '</div>';
+						}
 					}
+					else
+					{
+						$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+						$output .= '<p>Invalid Token.</p>';
+						$output .= '</div>';
+					}		
 				}
 				else
 				{

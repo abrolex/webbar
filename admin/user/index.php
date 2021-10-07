@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+session_regenerate_id();
+
+if(empty($_SESSION['admin_login']))
+{
+	header('location:http://'.$_SERVER['HTTP_HOST'].'/admin/login.php');
+	exit;
+}
+?>
 <!DOCTYPE HTML>
 <html lang="de">
 	<head>
@@ -30,7 +41,7 @@
 							</div>
 						</div>
 					</form>
-					<p><a class="w3-btn w3-block w3-padding-large blue" href="add.php">User erstellen <i class="fas fa-plus"></i></a></p>
+					<p><a class="w3-btn w3-block w3-padding-large blue" href="add.php">User erstellen <i class="fas fa-user-plus"></i></a></p>
 				</div>
 			</div>
 		</div>

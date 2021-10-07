@@ -55,39 +55,55 @@ else
 								else
 								{
 									$query = sprintf("
-									SELECT user_id,user_password,user_salt
+									SELECT user_id,user_password,user_salt,user_active,user_admin
 									FROM user
-									WHERE user_email = '%s'
-									AND user_admin = '%s';",
-									$sql->real_escape_string($email),
-									$sql->real_escape_string(1));
+									WHERE user_email = '%s';",
+									$sql->real_escape_string($email));
 									
 									$result = $sql->query($query);
 									
 									if($row = $result->fetch_array(MYSQLI_ASSOC))
 									{
-										if($row['user_password'] == passwdhash($row['user_salt'],$_POST['user_password']))
+										if($row['user_active'])
 										{
-											session_start();
-											
-											$user_csrf_token = randomstr(10);
-											
-											$_SESSION = array('admin_login' => true,'user_id' => $row['user_id'],'user_csrf_token' => $user_csrf_token);
-											
-											header('location:http://'.$_SERVER['HTTP_HOST'].'/admin/index.php');
-											exit;
+											if($row['user_admin'])
+											{
+												if($row['user_password'] == passwdhash($row['user_salt'],$_POST['user_password']))
+												{
+													session_start();
+													
+													$user_csrf_token = randomstr(10);
+													
+													$_SESSION = array('admin_login' => true,'user_id' => $row['user_id'],'user_csrf_token' => $user_csrf_token);
+													
+													header('location:http://'.$_SERVER['HTTP_HOST'].'/admin/index.php');
+													exit;
+												}
+												else
+												{
+													$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+													$output .= '<p>Sie haben ein falsches Passwort eingegeben.</p>';
+													$output .= '</div>';
+												}
+											}
+											else
+											{
+												$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+												$output .= '<p>Sie besitzen keine Berechtigungen f&uuml;r diesen Bereich.</p>';
+												$output .= '</div>';
+											}
 										}
 										else
 										{
 											$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-											$output .= '<p>Sie haben ein falsches Passwort eingegeben.</p>';
+											$output .= '<p>Ihr Account ist deaktiviert.</p>';
 											$output .= '</div>';
 										}
 									}
 									else
 									{
 										$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-										$output .= '<p>E-Mail-Adresse nicht gefunden oder keine Adminrechte vorhanden.</p>';
+										$output .= '<p>Die eingegebene E-Mail-Adresse ist nicht vorhanden.</p>';
 										$output .= '</div>';
 									}
 								}

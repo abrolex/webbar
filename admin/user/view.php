@@ -16,46 +16,67 @@ else
 
 	if(!empty($_GET))
 	{
-		if(empty($_GET['article_id']))
+		if(empty($_GET['user_id']))
 		{
 			$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-			$output .= '<p>Es wurde keine ArtikelID gesendet.</p>';
+			$output .= '<p>Es wurde keine UserID gesendet.</p>';
 			$output .= '</div>';
 		}
 		else
 		{
-			if(preg_match('/[^0-9]/',$_GET['article_id']) == 0)
+			if(preg_match('/[^0-9]/',$_GET['user_id']) == 0)
 			{
 				$sql = mysqli_connect($app_sqlhost,$app_sqluser,$app_sqlpasswd,$app_sqldb);
 				
 				if(!$sql)
 				{
 					$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-					$output .= '<p>Es wurde keine ArtikelID gesendet.</p>';
+					$output .= '<p>Es konnte keine Datenbankverbindung hergestellt werden.</p>';
 					$output .= '</div>';
 				}
 				else
 				{
 					$query = sprintf("
-					SELECT article_id,article_name,article_variant,article_price,article_keywords
-					FROM article
-					WHERE article_id = '%s';",
-					$sql->real_escape_string($_GET['article_id']));
+					SELECT user_id,user_email,user_username,user_credit,user_active,user_admin
+					FROM user
+					WHERE user_id = '%s';",
+					$sql->real_escape_string($_GET['user_id']));
 					
 					$result = $sql->query($query);
 					
 					if($row = $result->fetch_array(MYSQLI_ASSOC))
 					{
-						$output .= '<p><a class="w3-btn w3-padding-large blue" href="del.php?article_id='.$row['article_id'].'&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-trash"></i></a></p>';
+						$output .= '<p><a class="w3-btn w3-padding-large blue" href="del.php?user_id='.$row['user_id'].'&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-trash"></i></a> ';
+						
+						if($row['user_active'])
+						{
+							$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=user_active&attr_value=0&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-times"></i></a> ';
+						}
+						else
+						{
+							$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=user_active&attr_value=1&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-check"></i></a> ';
+						}
+						
+						if($row['user_admin'])
+						{
+							$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=user_admin&attr_value=0&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-arrow-down"></i></a> ';
+						}
+						else
+						{
+							$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=user_admin&attr_value=1&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-arrow-up"></i></a> ';
+						}
+						
+						$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=user_password&attr_value=reset&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-key"></i></a>';
+						$output .= '</p>';
 						
 						$output .= '<form action="change.php" method="get">';
 						$output .= '<div class="w3-section">';
-						$output .= '<label>Artikelname</label>';
+						$output .= '<label>E-Mail-Adresse</label>';
 						$output .= '<div class="w3-row">';
 						$output .= '<div class="w3-col s9 m9 l9">';
-						$output .= '<input type="hidden" name="article_id" value="'.$row['article_id'].'"/>';
-						$output .= '<input type="hidden" name="attr" value="article_name"/>';
-						$output .= '<input class="w3-input w3-border" readonly="true" type="text" name="attr_value" placeholder="Artikelname" value="'.$row['article_name'].'"/>';
+						$output .= '<input type="hidden" name="user_id" value="'.$row['user_id'].'"/>';
+						$output .= '<input type="hidden" name="attr" value="user_email"/>';
+						$output .= '<input class="w3-input w3-border" readonly="true" type="email" name="attr_value" placeholder="E-Mail-Adresse" value="'.$row['user_email'].'"/>';
 						$output .= '</div>';
 						$output .= '<div class="w3-col s3 m3 l3">';
 						$output .= '<button onclick="startEdit(1);" class="w3-btn w3-block w3-border border-blue blue" name="edit_btn" type="button"><i class="fas fa-edit"></i></button>';
@@ -69,12 +90,12 @@ else
 						
 						$output .= '<form action="change.php" method="get">';
 						$output .= '<div class="w3-section">';
-						$output .= '<label>Varianten</label>';
+						$output .= '<label>Username</label>';
 						$output .= '<div class="w3-row">';
 						$output .= '<div class="w3-col s9 m9 l9">';
-						$output .= '<input type="hidden" name="article_id" value="'.$row['article_id'].'"/>';
-						$output .= '<input type="hidden" name="attr" value="article_variant"/>';
-						$output .= '<input class="w3-input w3-border" readonly="true" type="text" name="attr_value" placeholder="Varianten" value="'.$row['article_variant'].'"/>';
+						$output .= '<input type="hidden" name="user_id" value="'.$row['user_id'].'"/>';
+						$output .= '<input type="hidden" name="attr" value="user_username"/>';
+						$output .= '<input class="w3-input w3-border" readonly="true" type="text" name="attr_value" placeholder="Username" value="'.$row['user_username'].'"/>';
 						$output .= '</div>';
 						$output .= '<div class="w3-col s3 m3 l3">';
 						$output .= '<button onclick="startEdit(2);" class="w3-btn w3-block w3-border border-blue blue" name="edit_btn" type="button"><i class="fas fa-edit"></i></button>';
@@ -88,12 +109,12 @@ else
 						
 						$output .= '<form action="change.php" method="get">';
 						$output .= '<div class="w3-section">';
-						$output .= '<label>Preise in &euro;</label>';
+						$output .= '<label>Guthaben in &euro;</label>';
 						$output .= '<div class="w3-row">';
 						$output .= '<div class="w3-col s9 m9 l9">';
-						$output .= '<input type="hidden" name="article_id" value="'.$row['article_id'].'"/>';
-						$output .= '<input type="hidden" name="attr" value="article_price"/>';
-						$output .= '<input class="w3-input w3-border" readonly="true" type="text" name="attr_value" placeholder="Preise in &euro;" value="'.$row['article_price'].'"/>';
+						$output .= '<input type="hidden" name="user_id" value="'.$row['user_id'].'"/>';
+						$output .= '<input type="hidden" name="attr" value="user_credit"/>';
+						$output .= '<input class="w3-input w3-border" readonly="true" type="text" name="attr_value" placeholder="Guthaben in &euro;" value="'.$row['user_credit'].'"/>';
 						$output .= '</div>';
 						$output .= '<div class="w3-col s3 m3 l3">';
 						$output .= '<button onclick="startEdit(3);" class="w3-btn w3-block w3-border border-blue blue" name="edit_btn" type="button"><i class="fas fa-edit"></i></button>';
@@ -103,26 +124,7 @@ else
 						$output .= '</div>';
 						$output .= '<p><input type="hidden" name="csrf_token" value="'.$_SESSION['user_csrf_token'].'"/></p>';
 						$output .= '<p><button onclick="document.forms[3].submit();" class="w3-btn w3-padding-large blue" style="display:none;" name="save_btn" type="button">speichern <i class="fas fa-save"></i></button></p>';
-						$output .= '</form>';
-						
-						$output .= '<form action="change.php" method="get">';
-						$output .= '<div class="w3-section">';
-						$output .= '<label>Suchbegriffe</label>';
-						$output .= '<div class="w3-row">';
-						$output .= '<div class="w3-col s9 m9 l9">';
-						$output .= '<input type="hidden" name="article_id" value="'.$row['article_id'].'"/>';
-						$output .= '<input type="hidden" name="attr" value="article_keywords"/>';
-						$output .= '<input class="w3-input w3-border" readonly="true" type="text" name="attr_value" placeholder="Suchbegriffe" value="'.$row['article_keywords'].'"/>';
-						$output .= '</div>';
-						$output .= '<div class="w3-col s3 m3 l3">';
-						$output .= '<button onclick="startEdit(4);" class="w3-btn w3-block w3-border border-blue blue" name="edit_btn" type="button"><i class="fas fa-edit"></i></button>';
-						$output .= '<button onclick="cancelEdit(4);" class="w3-btn w3-block w3-border w3-border-red w3-red" style="display:none;" name="cancel_btn" type="button"><i class="fas fa-times"></i></button>';
-						$output .= '</div>';
-						$output .= '</div>';
-						$output .= '</div>';
-						$output .= '<p><input type="hidden" name="csrf_token" value="'.$_SESSION['user_csrf_token'].'"/></p>';
-						$output .= '<p><button onclick="document.forms[4].submit();" class="w3-btn w3-padding-large blue" style="display:none;" name="save_btn" type="button">speichern <i class="fas fa-save"></i></button></p>';
-						$output .= '</form>';
+						$output .= '</form>';	
 					}
 				}
 			}
@@ -145,7 +147,7 @@ else
 <!DOCTYPE HTML>
 <html lang="de">
 	<head>
-		<title>WebBar | Admin | Artikel anzeigen</title>
+		<title>WebBar | Admin | User anzeigen</title>
 		<?php
 		require($_SERVER['DOCUMENT_ROOT'].'/include/head.inc.php');
 		?>
@@ -156,8 +158,8 @@ else
 			<div class="w3-center">
 				<div class="w3-bar">
 					<a class="w3-bar-item w3-btn" href="/admin/"><i class="fas fa-home fa-2x"></i></a>
-					<a class="w3-bar-item w3-btn" href="../user/"><i class="fas fa-user fa-2x"></i></a>
-					<a class="w3-bar-item w3-btn active" href="index.php"><i class="fas fa-cube fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn active" href="index.php"><i class="fas fa-user fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn" href="../article/"><i class="fas fa-cube fa-2x"></i></a>
 				</div>
 			</div>
 			<div class="w3-container">
@@ -165,7 +167,7 @@ else
 					<form action="search.php" method="get">
 						<div class="w3-row w3-section">
 							<div class="w3-col s8 m8 l8">
-								<input class="w3-input w3-border" type="text" name="search" placeholder="Artikel suchen"/>
+								<input class="w3-input w3-border" type="text" name="search" placeholder="User suchen"/>
 								<input type="hidden" name="s" value="0"/>
 								<input type="hidden" name="ps" value="5"/>
 							</div>
@@ -174,7 +176,7 @@ else
 							</div>
 						</div>
 					</form>
-					<p><a class="w3-btn w3-block w3-padding-large blue" href="add.php">Artikel erstellen <i class="fas fa-plus"></i></a></p>
+					<p><a class="w3-btn w3-block w3-padding-large blue" href="add.php">User erstellen <i class="fas fa-user-plus"></i></a></p>
 				</div>
 				<div class="w3-panel w3-white">
 				<?php
