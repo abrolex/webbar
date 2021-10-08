@@ -81,13 +81,40 @@ else
 													else
 													{
 														$query = sprintf("
-														UPDATE user
-														SET user_email = '%s'
+														SELECT user_keywords
+														FROM user
 														WHERE user_id = '%s';",
-														$sql->real_escape_string($_GET['attr_value']),
 														$sql->real_escape_string($_GET['user_id']));
+														
+														$result = $sql->query($query);
+														
+														if($row = $result->fetch_array(MYSQLI_ASSOC))
+														{
+															$user_keywords = explode(' ',$row['user_keywords']);
+															
+															$user_keywords[0] = $_GET['attr_value'];
+															
+															$query = sprintf("
+															UPDATE user
+															SET user_email = '%s',
+															user_keywords = '%s'
+															WHERE user_id = '%s';",
+															$sql->real_escape_string($_GET['attr_value']),
+															$sql->real_escape_string(implode(' ',$user_keywords)),
+															$sql->real_escape_string($_GET['user_id']));
 													
-														break;
+															break;
+														}
+														else
+														{
+															$query = '';
+															
+															$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+															$output .= '<p>Es ist ein Fehler aufgetreten.</p>';
+															$output .= '</div>';
+															
+															break;
+														}
 													}
 												}
 												else
@@ -144,13 +171,40 @@ else
 												else
 												{
 													$query = sprintf("
-													UPDATE user
-													SET user_username = '%s'
+													SELECT user_keywords
+													FROM user
 													WHERE user_id = '%s';",
-													$sql->real_escape_string($_GET['attr_value']),
 													$sql->real_escape_string($_GET['user_id']));
+														
+													$result = $sql->query($query);
+														
+													if($row = $result->fetch_array(MYSQLI_ASSOC))
+													{
+														$user_keywords = explode(' ',$row['user_keywords']);
+															
+														$user_keywords[1] = $_GET['attr_value'];
+													
+														$query = sprintf("
+														UPDATE user
+														SET user_username = '%s',
+														user_keywords = '%s'
+														WHERE user_id = '%s';",
+														$sql->real_escape_string($_GET['attr_value']),
+														$sql->real_escape_string(implode(' ',$user_keywords)),
+														$sql->real_escape_string($_GET['user_id']));
 												
-													break;
+														break;
+													}
+													else
+													{
+														$query = '';
+															
+														$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+														$output .= '<p>Es ist ein Fehler aufgetreten.</p>';
+														$output .= '</div>';
+															
+														break;
+													}		
 												}
 											}
 											else

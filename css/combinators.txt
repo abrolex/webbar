@@ -1,0 +1,20 @@
+#css combinators
+
+#descendant selector (space) div p
+
+select all p elements of a div element.
+
+#child selector (>) div > p
+
+select all p elements that are children of a div element.
+
+#adjacent sibling selector (+) div + p
+
+select all p elements that are immediatley after a div element.
+
+#general sibling selector (~) div ~ p
+
+select all p elements that are next sibling of a div element.
+
+
+

@@ -60,57 +60,71 @@ else
 										}
 										else
 										{
-											/*
 											$query = sprintf("
 											SELECT user_id
 											FROM user
-											WHERE user_email = '%s'
-											OR user_username = '%s';",
-											$sql->real_escape_string($user_email),
-											$sql->real_escape_string($user_username));
-													
+											WHERE user_email = '%s';",
+											$sql->real_escape_string($user_email));
+											
 											$result = $sql->query($query);
-													
+											
 											if($row = $result->fetch_array(MYSQLI_ASSOC))
 											{
 												$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-												$output .= '<p>Username oder E-Mail-Adresse bereits vorhanden.</p>';
+												$output .= '<p>Die E-Mail-Adresse ist bereits vorhanden.</p>';
 												$output .= '</div>';
 											}
 											else
 											{
-												$user_salt = randomstr(10);
-														
-												$user_password = passwdhash($user_salt,$app_default_password);
-														
 												$query = sprintf("
-												INSERT INTO user
-												(user_email,user_username,user_password,user_salt,user_active,user_keywords)
-												VALUES
-												('%s','%s','%s','%s','%s','%s');",
-												$sql->real_escape_string($user_email),
-												$sql->real_escape_string($user_username),
-												$sql->real_escape_string($user_password),
-												$sql->real_escape_string($user_salt),
-												$sql->real_escape_string(1),
-												$sql->real_escape_string($user_email.' '.$user_username));
-														
-												$sql->query($query);
-														
-												if($sql->affected_rows == 1)
+												SELECT user_id
+												FROM user
+												WHERE user_username = '%s';",
+												$sql->real_escape_string($user_username));
+													
+												$result = $sql->query($query);
+													
+												if($row = $result->fetch_array(MYSQLI_ASSOC))
 												{
-													$showform = 0;
-															
-													$output .= '<div class="w3-panel w3-border w3-border-green w3-text-green">';
-													$output .= '<p>Der User wurde erfolgreich angelegt.</p>';
+													$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+													$output .= '<p>Der Username ist bereits vorhanden.</p>';
 													$output .= '</div>';
-													$output .= '<p><a class="w3-btn w3-block w3-padding-large blue" href="add.php">User erstellen <i class="fas fa-user-plus"></i></a></p>';
 												}
 												else
 												{
-													$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-													$output .= '<p>Der User konnte nicht angelegt werden.</p>';
-													$output .= '</div>';
+													$user_salt = randomstr(10);
+															
+													$user_password = passwdhash($user_salt,$app_default_password);
+															
+													$query = sprintf("
+													INSERT INTO user
+													(user_email,user_username,user_password,user_salt,user_active,user_keywords)
+													VALUES
+													('%s','%s','%s','%s','%s','%s');",
+													$sql->real_escape_string($user_email),
+													$sql->real_escape_string($user_username),
+													$sql->real_escape_string($user_password),
+													$sql->real_escape_string($user_salt),
+													$sql->real_escape_string(1),
+													$sql->real_escape_string($user_email.' '.$user_username));
+															
+													$sql->query($query);
+															
+													if($sql->affected_rows == 1)
+													{
+														$showform = 0;
+																
+														$output .= '<div class="w3-panel w3-border w3-border-green w3-text-green">';
+														$output .= '<p>Der User wurde erfolgreich angelegt.</p>';
+														$output .= '</div>';
+														$output .= '<p><a class="w3-btn w3-block w3-padding-large blue" href="add.php">User erstellen <i class="fas fa-user-plus"></i></a></p>';
+													}
+													else
+													{
+														$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+														$output .= '<p>Der User konnte nicht angelegt werden.</p>';
+														$output .= '</div>';
+													}
 												}
 											}
 										}
