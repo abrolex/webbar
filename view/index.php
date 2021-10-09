@@ -3,9 +3,9 @@ session_start();
 
 session_regenerate_id();
 
-if(empty($_SESSION['admin_login']))
+if(empty($_SESSION['user_login']))
 {
-	header('location:http://'.$_SERVER['HTTP_HOST'].'/admin/login.php');
+	header('location:http://'.$_SERVER['HTTP_HOST'].'/login.php');
 	exit;
 }
 else
