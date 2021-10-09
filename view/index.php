@@ -46,7 +46,32 @@ else
 					
 					if($row = $result->fetch_array(MYSQLI_ASSOC))
 					{
+						$output .= '<h3>'.$row['article_name'].'</h3>';
+						$output .= '<form action="/cart/add.php" method="get">';
+						$output .= '<p><input type="hidden" name="article_id" value="'.$row['article_id'].'"/></p>';
+						$output .= '<div class="w3-row-padding w3-section">';
+						$output .= '<div class="w3-col s6 m6 l6">';
+						$output .= '<label for"article_variant">Variante</label>';
+						$output .= '<select class="w3-select w3-border w3-white" name="article_variant">';
 						
+						for($i = 0; $i < count($variant_arr); $i++)
+						{
+						  $output .= '<option value="'.$i.'">'.$variant_arr[$i].' '.$price_arr[$i].'</option>';
+						}
+						
+						$output .= '</select></div>';
+						$output .= '<div class="w3-col s6 m6 l6">';
+						$output .= '<label for"article_amount">Anzahl</label>';
+						$output .= '<select class="w3-select w3-border w3-white" name="article_amount">';
+						
+						for($i = 1; $i <= 99; $i++)
+						{
+						  $output .= '<option value="'.$i.'">'.$i.'x</option>';
+						}
+						
+						$output .= '</select></div></div>';
+						$output .= '<p><button class="w3-btn w3-block w3-padding-large blue" type="submit">in den Warenkorb <i class="fas fa-plus"></i></button></p>';
+						$output .= '</form>';
 					}
 				}
 			}
