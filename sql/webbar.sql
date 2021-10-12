@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 07. Okt 2021 um 15:16
+-- Erstellungszeit: 12. Okt 2021 um 15:17
 -- Server Version: 5.6.13
 -- PHP-Version: 5.4.17
 
@@ -54,6 +54,25 @@ INSERT INTO `article` (`article_id`, `article_name`, `article_variant`, `article
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `cart`
+--
+
+CREATE TABLE IF NOT EXISTS `cart` (
+  `cart_id` varchar(200) NOT NULL,
+  `cart_content` longtext NOT NULL,
+  `cart_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Daten für Tabelle `cart`
+--
+
+INSERT INTO `cart` (`cart_id`, `cart_content`, `cart_time`) VALUES
+('d810f0e847c55befc5ae79f5d7297d54f863540136ba80317a422e5edfeb9973', '[{"article_id":"7","article_variant":"0","article_amount":36},{"article_id":"4","article_variant":"0","article_amount":"7"},{"article_id":"6","article_variant":"0","article_amount":"1"},{"article_id":"8","article_variant":"0","article_amount":"1"},{"article_id":"9","article_variant":"0","article_amount":"11"}]', '2021-10-12 15:05:09');
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `user`
 --
 
@@ -64,6 +83,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `user_credit` float(4,2) NOT NULL DEFAULT '0.00',
   `user_password` varchar(200) NOT NULL,
   `user_salt` varchar(10) NOT NULL,
+  `user_cart` longtext NOT NULL,
   `user_passwordtime` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   `user_passwordcode` varchar(200) DEFAULT NULL,
   `user_activationtime` timestamp NULL DEFAULT '0000-00-00 00:00:00',
@@ -72,14 +92,14 @@ CREATE TABLE IF NOT EXISTS `user` (
   `user_admin` enum('1','0') NOT NULL DEFAULT '0',
   `user_keywords` longtext NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Daten für Tabelle `user`
 --
 
-INSERT INTO `user` (`user_id`, `user_email`, `user_username`, `user_credit`, `user_password`, `user_salt`, `user_passwordtime`, `user_passwordcode`, `user_activationtime`, `user_activationcode`, `user_active`, `user_admin`, `user_keywords`) VALUES
-(1, 'wbadmin@web.de', 'wbadmin', 99.99, 'b5fdb4951be86a26b0fbff64d740393b823fc2ad187b072ab499601377c1e71b', '5OWEct3xug', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00', NULL, '1', '1', 'wbadmin@web.de wbadmin');
+INSERT INTO `user` (`user_id`, `user_email`, `user_username`, `user_credit`, `user_password`, `user_salt`, `user_cart`, `user_passwordtime`, `user_passwordcode`, `user_activationtime`, `user_activationcode`, `user_active`, `user_admin`, `user_keywords`) VALUES
+(1, 'wbadmin@gmail.com', 'wbadmin', 99.99, 'b5fdb4951be86a26b0fbff64d740393b823fc2ad187b072ab499601377c1e71b', '5OWEct3xug', '[]', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00', NULL, '1', '1', 'wbadmin@gmail.com wbadmin');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

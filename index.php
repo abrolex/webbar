@@ -1,13 +1,31 @@
 <?php
-/*session_start();
+require($_SERVER['DOCUMENT_ROOT'].'/include/config.inc.php');
 
-session_regenerate_id();
+$sql = mysqli_connect($app_sqlhost,$app_sqluser,$app_sqlpasswd,$app_sqldb);
 
-if(empty($_SESSION['user_login']))
+if(!$sql)
 {
-	header('location:http://'.$_SERVER['HTTP_HOST'].'/login/');
-	exit;
-}*/
+	$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+	$output .= '<p>Es konnte keine Datenbankverbindung hergestellt werden.</p>';
+	$output .= '</div>';
+}
+else
+{
+	session_start();
+
+	session_regenerate_id();
+
+	if(!empty($_SESSION['user_login']))
+	{
+		require($_SERVER['DOCUMENT_ROOT'].'/include/user_cart.inc.php');
+	}
+	else
+	{
+		require($_SERVER['DOCUMENT_ROOT'].'/include/randomstr.inc.php');
+		
+		require($_SERVER['DOCUMENT_ROOT'].'/include/cookie_cart.inc.php');
+	}
+}
 ?>
 <!DOCTYPE HTML>
 <html lang="de">
@@ -25,7 +43,14 @@ if(empty($_SESSION['user_login']))
 				<div class="w3-bar">
 					<a class="w3-bar-item w3-btn active" href="/"><i class="fas fa-home fa-2x"></i></a>
 					<a class="w3-bar-item w3-btn" href="user/"><i class="fas fa-user fa-2x"></i></a>
-					<a class="w3-bar-item w3-btn" href="cart/"><i class="fas fa-shopping-cart fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn" href="cart/"><i class="fas fa-shopping-cart fa-2x"></i> 
+					<?php
+					if(!empty($cart_count))
+					{
+						echo $cart_count;
+					}
+					?>
+					</a>
 				</div>
 			</div>
 			<div class="w3-container">

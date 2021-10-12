@@ -1,16 +1,30 @@
 <?php
-session_start();
+require($_SERVER['DOCUMENT_ROOT'].'/include/config.inc.php');
 
-session_regenerate_id();
+$sql = mysqli_connect($app_sqlhost,$app_sqluser,$app_sqlpasswd,$app_sqldb);
 
-if(empty($_SESSION['user_login']))
+if(!$sql)
 {
-	header('location:http://'.$_SERVER['HTTP_HOST'].'/login.php');
-	exit;
+	$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+	$output .= '<p>Es konnte keine Datenbankverbindung hergestellt werden.</p>';
+	$output .= '</div>';
 }
 else
 {
-	require($_SERVER['DOCUMENT_ROOT'].'/include/config.inc.php');
+	session_start();
+
+	session_regenerate_id();
+
+	if(!empty($_SESSION['user_login']))
+	{
+		require($_SERVER['DOCUMENT_ROOT'].'/include/user_cart.inc.php');
+	}
+	else
+	{
+		require($_SERVER['DOCUMENT_ROOT'].'/include/randomstr.inc.php');
+		
+		require($_SERVER['DOCUMENT_ROOT'].'/include/cookie_cart.inc.php');
+	}
 
 	$output = '';
 
@@ -26,53 +40,46 @@ else
 		{
 			if(preg_match('/[^0-9]/',$_GET['article_id']) == 0)
 			{
-				$sql = mysqli_connect($app_sqlhost,$app_sqluser,$app_sqlpasswd,$app_sqldb);
-				
-				if(!$sql)
-				{
-					$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-					$output .= '<p>Es wurde keine ArtikelID gesendet.</p>';
-					$output .= '</div>';
-				}
-				else
-				{
-					$query = sprintf("
-					SELECT article_id,article_name,article_variant,article_price
-					FROM article
-					WHERE article_id = '%s';",
-					$sql->real_escape_string($_GET['article_id']));
+				$query = sprintf("
+				SELECT article_id,article_name,article_variant,article_price
+				FROM article
+				WHERE article_id = '%s';",
+				$sql->real_escape_string($_GET['article_id']));
 					
-					$result = $sql->query($query);
+				$result = $sql->query($query);
 					
-					if($row = $result->fetch_array(MYSQLI_ASSOC))
+				if($row = $result->fetch_array(MYSQLI_ASSOC))
+				{
+					$variant_arr = explode('/',$row['article_variant']);
+						
+					$price_arr = explode('/',$row['article_price']);
+						
+					$output .= '<h3>'.$row['article_name'].'</h3>';
+					$output .= '<form action="/cart/add.php" method="get">';
+					$output .= '<p><input type="hidden" name="article_id" value="'.$row['article_id'].'"/></p>';
+					$output .= '<div class="w3-row-padding w3-section" style="padding:0;">';
+					$output .= '<div class="w3-col s6 m6 l6" style="padding-left:0;">';
+					$output .= '<label for"article_variant">Variante</label>';
+					$output .= '<select class="w3-select w3-border w3-white" name="article_variant">';
+						
+					for($i = 0; $i < count($variant_arr); $i++)
 					{
-						$output .= '<h3>'.$row['article_name'].'</h3>';
-						$output .= '<form action="/cart/add.php" method="get">';
-						$output .= '<p><input type="hidden" name="article_id" value="'.$row['article_id'].'"/></p>';
-						$output .= '<div class="w3-row-padding w3-section">';
-						$output .= '<div class="w3-col s6 m6 l6">';
-						$output .= '<label for"article_variant">Variante</label>';
-						$output .= '<select class="w3-select w3-border w3-white" name="article_variant">';
-						
-						for($i = 0; $i < count($variant_arr); $i++)
-						{
-						  $output .= '<option value="'.$i.'">'.$variant_arr[$i].' '.$price_arr[$i].'</option>';
-						}
-						
-						$output .= '</select></div>';
-						$output .= '<div class="w3-col s6 m6 l6">';
-						$output .= '<label for"article_amount">Anzahl</label>';
-						$output .= '<select class="w3-select w3-border w3-white" name="article_amount">';
-						
-						for($i = 1; $i <= 99; $i++)
-						{
-						  $output .= '<option value="'.$i.'">'.$i.'x</option>';
-						}
-						
-						$output .= '</select></div></div>';
-						$output .= '<p><button class="w3-btn w3-block w3-padding-large blue" type="submit">in den Warenkorb <i class="fas fa-plus"></i></button></p>';
-						$output .= '</form>';
+						$output .= '<option value="'.$i.'">'.$variant_arr[$i].' '.$price_arr[$i].' &euro;</option>';
 					}
+						
+					$output .= '</select></div>';
+					$output .= '<div class="w3-col s6 m6 l6" style="padding-right:0;">';
+					$output .= '<label for"article_amount">Anzahl</label>';
+					$output .= '<select class="w3-select w3-border w3-white" name="article_amount">';
+						
+					for($i = 1; $i <= 99; $i++)
+					{
+						$output .= '<option value="'.$i.'">'.$i.'x</option>';
+					}
+						
+					$output .= '</select></div></div>';
+					$output .= '<p><button class="w3-btn w3-block w3-padding-large blue" type="submit">in den Warenkorb <i class="fas fa-plus"></i></button></p>';
+					$output .= '</form>';
 				}
 			}
 			else
@@ -107,7 +114,14 @@ else
 				<div class="w3-bar">
 					<a class="w3-bar-item w3-btn" href="/"><i class="fas fa-home fa-2x"></i></a>
 					<a class="w3-bar-item w3-btn" href="/user/"><i class="fas fa-user fa-2x"></i></a>
-					<a class="w3-bar-item w3-btn" href="/cart/"><i class="fas fa-shopping-cart fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn" href="/cart/"><i class="fas fa-shopping-cart fa-2x"></i> 
+					<?php
+					if(!empty($cart_count))
+					{
+						echo $cart_count;
+					}
+					?>
+					</a>
 				</div>
 			</div>
 			<div class="w3-container">
