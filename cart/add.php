@@ -248,7 +248,7 @@ $output .= '<p><a class="w3-btn w3-padding-large w3-block blue" href="/">weiter 
 <!DOCTYPE HTML>
 <html lang="de">
 	<head>
-		<title>WebBar | Warenkorb &auml;ndern</title>
+		<title>WebBar | Warenkorb Artikel hinzuf&uuml;gen</title>
 		<?php
 		require($_SERVER['DOCUMENT_ROOT'].'/include/head.inc.php');
 		?>
@@ -261,7 +261,7 @@ $output .= '<p><a class="w3-btn w3-padding-large w3-block blue" href="/">weiter 
 				<div class="w3-bar">
 					<a class="w3-bar-item w3-btn" href="/"><i class="fas fa-home fa-2x"></i></a>
 					<a class="w3-bar-item w3-btn" href="/user/"><i class="fas fa-user fa-2x"></i></a>
-					<a class="w3-bar-item w3-btn" href="index.php"><i class="fas fa-shopping-cart fa-2x"></i> 
+					<a class="w3-bar-item w3-btn active" href="/cart/"><i class="fas fa-shopping-cart fa-2x"></i> 
 					<?php
 					if(!empty($cart_count))
 					{

@@ -30,6 +30,8 @@ else
 	
 	if(!empty($cart))
 	{
+		$price_g = 0.00;
+		
 		$output .= '<h4>'.$cart_count.' Artikel im Warenkorb</h4>';
 		
 		for($i = 0;$i < $cart_count;$i++)
@@ -44,32 +46,68 @@ else
 			
 			if($row = $result->fetch_array(MYSQLI_ASSOC))
 			{
-				/*$variant_arr = explode('/',$row['article_variant']);
+				$variant_arr = explode('/',$row['article_variant']);
 				
 				$price_arr = explode('/',$row['article_price']);
 				
 				$price = number_format($price_arr[$cart[$i]['article_variant']]*$cart[$i]['article_amount'],2,'.','.');
 				
-				$output .= '<p class="w3-large"><a href="del.php?article_id='.$i.'"><i class="fas fa-times"></i></a> '.$row['article_name'].' '.$variant_arr[$cart[$i]['article_variant']].'</p>';
+				$output .= '<p class="w3-large"><a href="del.php?article_id='.$i.'"><i class="fas fa-times"></i></a> '.$row['article_name'].'</p>';
 				$output .= '<div class="w3-section">';
-				$output .= 'Anzahl';
+				$output .= 'Anzahl & Variante';
 				$output .= '<div class="w3-row">';
 				$output .= '<div class="w3-col s2 m2 l2">';
-				$output .= '<a class="w3-btn w3-block w3-border border-blue blue"><i class="fas fa-minus"></i></a>';
+				$output .= '<a class="w3-btn w3-block w3-border border-blue blue" href="change.php?article_id='.$i.'&attr=amount&attr_value=reduce"><i class="fas fa-minus"></i></a>';
+				$output .= '</div>';
+				$output .= '<div class="w3-col s3 m3 l3">';
+				$output .= '<form class="changeform1" action="change.php" method="get">';
+				$output .= '<input type="hidden" name="article_id" value="'.$i.'"/>';
+				$output .= '<input type="hidden" name="attr" value="amount"/>';
+				$output .= '<select onchange="'."document.getElementsByClassName('changeform1')".'['.$i.'].submit();" class="w3-select w3-border w3-white" style="height:40.5px" name="attr_value">';
+				$output .= '<option value="">'.$cart[$i]['article_amount'].'x</option>';
+				
+				for($j = 1; $j <= 99; $j++)
+				{
+					$output .= '<option value="'.$j.'">'.$j.'x</option>';
+				}
+				
+				$output .= '</select>';
+				$output .= '</form>';
 				$output .= '</div>';
 				$output .= '<div class="w3-col s2 m2 l2">';
-				$output .= '<input class="w3-input w3-border" value="'.$cart[$i]['article_amount'].'"/>';
+				$output .= '<a class="w3-btn w3-block w3-border border-blue blue" href="change.php?article_id='.$i.'&attr=amount&attr_value=rise"><i class="fas fa-plus"></i></a>';
 				$output .= '</div>';
-				$output .= '<div class="w3-col s2 m2 l2">';
-				$output .= '<a class="w3-btn w3-block w3-border border-blue blue"><i class="fas fa-plus"></i></a>';
+				$output .= '<div class="w3-col s5 m5 l5">';
+				$output .= '<form class="changeform2" action="change.php" method="get">';
+				$output .= '<input type="hidden" name="article_id" value="'.$i.'"/>';
+				$output .= '<input type="hidden" name="attr" value="variant"/>';
+				$output .= '<select onchange="'."document.getElementsByClassName('changeform2')".'['.$i.'].submit();" class="w3-select w3-border w3-white" style="height:40.5px;" name="attr_value">';
+				$output .= '<option value="">'.$variant_arr[$cart[$i]['article_variant']].' '.$price_arr[$cart[$i]['article_variant']].' &euro;</option>';
+				
+				for($j = 0; $j < count($variant_arr); $j++)
+				{
+					$output .= '<option value="'.$j.'">'.$variant_arr[$j].' '.$price_arr[$j].' &euro;</option>';
+				}
+				
+				$output .= '</select>';
+				$output .= '</form>';
 				$output .= '</div>';
-				$output .= '<div class="w3-col s6 m6 l6">';
-				$output .= '<button class="w3-btn w3-block w3-border grey">Preis: '.$price.' &euro;</button>';
 				$output .= '</div>';
 				$output .= '</div>';
-				$output .= '</div>';
+				$output .= '<p><button class="w3-btn w3-block w3-padding-large w3-border grey">Preis: '.$price.' &euro;</button></p>';
+				
+				$price_g = number_format($price+$price_g,2,'.','.');
 			}
 		}
+		
+		$output .= '<p><button class="w3-btn w3-block w3-padding-large w3-border grey">Summe: '.$price_g.' &euro;</button></p>';
+		$output .= '<p><a class="w3-btn w3-block w3-padding-large blue" href="/order/check.php">Bestellung abschlie&szlig;en</a></p>';
+	}
+	else
+	{
+		$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+		$output .= '<p>Ihr Warenkorb ist leer :(</p>';
+		$output .= '</div>';
 	}
 }		
 ?>
