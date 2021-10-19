@@ -94,14 +94,14 @@ else
 				$output .= '</div>';
 				$output .= '</div>';
 				$output .= '</div>';
-				$output .= '<p><button class="w3-btn w3-block w3-padding-large w3-border grey">Preis: '.$price.' &euro;</button></p>';
+				$output .= '<p><button class="w3-btn w3-block w3-padding-large w3-border grey">Artikelpreis: '.$price.' &euro;</button></p>';
 				
 				$price_g = number_format($price+$price_g,2,'.','.');
 			}
 		}
 		
 		$output .= '<p><button class="w3-btn w3-block w3-padding-large w3-border grey">Summe: '.$price_g.' &euro;</button></p>';
-		$output .= '<p><a class="w3-btn w3-block w3-padding-large blue" href="/order/check.php">Bestellung abschlie&szlig;en</a></p>';
+		$output .= '<p><a class="w3-btn w3-block w3-padding-large blue" href="/order/check.php">Bestellung abschlie&szlig;en <i class="fas fa-arrow-right"></i></a></p>';
 	}
 	else
 	{

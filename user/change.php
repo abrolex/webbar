@@ -11,12 +11,16 @@ if(empty($_SESSION['user_login']))
 else
 {
     require($_SERVER['DOCUMENT_ROOT'].'/include/config.inc.php');
+	
+	require($_SERVER['DOCUMENT_ROOT'].'/include/randomstr.inc.php');
+	
+	require($_SERVER['DOCUMENT_ROOT'].'/include/passwdhash.inc.php');
 
     $output = '';
 
-    if(!empty($_GET))
+    if(!empty($_POST))
     {
-        if(empty($_GET['attr']) || empty($_GET['attr_value']) || empty($_GET['csrf_token']))
+        if(empty($_POST['attr']) || empty($_POST['attr_value']) || empty($_POST['csrf_token']))
         {
             $output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
             $output .= '<p>Es wurden nicht alle Daten gesendet.</p>';
@@ -24,15 +28,15 @@ else
         }
         else
         {  
-            if(preg_match('/[^a-z]/',$_GET['attr']) == 0)
+            if(preg_match('/[^a-z]/',$_POST['attr']) == 0)
             {
-                $aktions = array('username','email','location');
+                $aktions = array('username','email','location','password');
 
-                if(in_array($_GET['attr'],$aktions))
+                if(in_array($_POST['attr'],$aktions))
                 {
-                    if(preg_match('/[^a-zA-Z0-9]/',$_GET['csrf_token']) == 0)
+                    if(preg_match('/[^a-zA-Z0-9]/',$_POST['csrf_token']) == 0)
                     {
-                        if($_SESSION['user_csrf_token'] == $_GET['csrf_token'])
+                        if($_SESSION['user_csrf_token'] == $_POST['csrf_token'])
                         {
                             $sql = mysqli_connect($app_sqlhost,$app_sqluser,$app_sqlpasswd,$app_sqldb);
 
@@ -44,19 +48,19 @@ else
                             }
                             else
                             {
-                                switch($_GET['attr'])
+                                switch($_POST['attr'])
                                 {
                                     case $aktions[0]:
                                         
-                                        if(strlen($_GET['attr_value']) <= 10)
+                                        if(strlen($_POST['attr_value']) <= 10)
                                         {
-                                            if(preg_match('/[^a-zA-Z0-9\-\_]/',$_GET['attr_value']) == 0)
+                                            if(preg_match('/[^a-zA-Z0-9\-\_]/',$_POST['attr_value']) == 0)
                                             {
                                                 $query = sprintf("
                                                 SELECT user_id
                                                 FROM user
                                                 WHERE user_username = '%s';",
-                                                $sql->real_escape_string($_GET['attr_value']));
+                                                $sql->real_escape_string($_POST['attr_value']));
 
                                                 $result = $sql->query($query);
 
@@ -82,14 +86,14 @@ else
                                                     {
                                                         $user_keywords = explode(" ",$row['user_keywords']);
 
-                                                        $user_keywords[1] = $_GET['attr_value'];
+                                                        $user_keywords[1] = $_POST['attr_value'];
 
                                                         $query = sprintf("
                                                         UPDATE user
                                                         SET user_username = '%s',
                                                         user_keywords = '%s'
                                                         WHERE user_id = '%s';",
-                                                        $sql->real_escape_string($_GET['attr_value']),
+                                                        $sql->real_escape_string($_POST['attr_value']),
                                                         $sql->real_escape_string(implode(" ",$user_keywords)),
                                                         $sql->real_escape_string($_SESSION['user_id']));
                                                     }
@@ -121,13 +125,13 @@ else
                                     
                                     case $aktions[1]:
 
-                                        if(preg_match('/[^a-zA-Z0-9\.\-\_\@]/',$_GET['attr_value']) == 0)
+                                        if(preg_match('/[^a-zA-Z0-9\.\-\_\@]/',$_POST['attr_value']) == 0)
                                         {
-                                            $pos = strpos($_GET['attr_value'],'@');
+                                            $pos = strpos($_POST['attr_value'],'@');
 
                                             if($pos != false)
                                             {
-                                                $provider = substr($_GET['attr_value'],$pos+1);
+                                                $provider = substr($_POST['attr_value'],$pos+1);
 
                                                 if(in_array($provider,$app_email_provider))
                                                 {
@@ -135,7 +139,7 @@ else
                                                     SELECT user_id
                                                     FROM user
                                                     WHERE user_email = '%s';",
-                                                    $sql->real_escape_string($_GET['attr_value']));
+                                                    $sql->real_escape_string($_POST['attr_value']));
     
                                                     $result = $sql->query($query);
     
@@ -161,14 +165,14 @@ else
                                                         {
                                                             $user_keywords = explode(" ",$row['user_keywords']);
     
-                                                            $user_keywords[0] = $_GET['attr_value'];
+                                                            $user_keywords[0] = $_POST['attr_value'];
     
                                                             $query = sprintf("
                                                             UPDATE user
                                                             SET user_email = '%s',
                                                             user_keywords = '%s'
                                                             WHERE user_id = '%s';",
-                                                            $sql->real_escape_string($_GET['attr_value']),
+                                                            $sql->real_escape_string($_POST['attr_value']),
                                                             $sql->real_escape_string(implode(" ",$user_keywords)),
                                                             $sql->real_escape_string($_SESSION['user_id']));
                                                         }
@@ -207,13 +211,13 @@ else
                                     
                                     case $aktions[2]:
 
-                                        if(preg_match('/[^0-9]/',$_GET['attr_value']) == 0)
+                                        if(preg_match('/[^0-9]/',$_POST['attr_value']) == 0)
                                         {
                                             $query = sprintf("
                                             SELECT location_name
                                             FROM location
                                             WHERE location_id = '%s';",
-                                            $sql->real_escape_string($_GET['attr_value']));
+                                            $sql->real_escape_string($_POST['attr_value']));
 
                                             $result = $sql->query($query);
 
@@ -229,13 +233,13 @@ else
 
                                                 if($row = $result->fetch_array(MYSQLI_ASSOC))
                                                 {
-                                                    if($row['user_location_id'] != $_GET['attr_value'])
+                                                    if($row['user_location_id'] != $_POST['attr_value'])
                                                     {
                                                         $query = sprintf("
                                                         UPDATE user
                                                         SET user_location_id = '%s'
                                                         WHERE user_id = '%s';",
-                                                        $sql->real_escape_string($_GET['attr_value']),
+                                                        $sql->real_escape_string($_POST['attr_value']),
                                                         $sql->real_escape_string($_SESSION['user_id']));
                                                     }
                                                     else
@@ -273,8 +277,43 @@ else
                                         }
 
                                         break;
-                                }
-
+										
+									case $aktions[3]:
+									
+										if(strlen($_POST['attr_value']) >= 8)
+										{
+											if(preg_match('/[A-Z]{1,}/',$_POST['attr_value']) != 0 && preg_match('/[0-9]{1,}/',$_POST['attr_value']) != 0)
+											{
+												$salt = randomstr(10);
+												
+												$password = passwdhash($salt,$_POST['attr_value']);
+												
+												$query = sprintf("
+												UPDATE user
+												SET user_password = '%s',
+												user_salt = '%s'
+												WHERE user_id = '%s';",
+												$sql->real_escape_string($password),
+												$sql->real_escape_string($salt),
+												$sql->real_escape_string($_SESSION['user_id']));
+											}
+											else
+											{
+												$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+												$output .= '<p>Ihr Passwort ben&ouml;tigt mind. einen Gro&szlig;buchstaben und eine Zahl.</p>';
+												$output .= '</div>';
+											}
+										}
+										else
+										{
+											$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+											$output .= '<p>Ihr Passwort muss mind. 8 Zeichen lang sein.</p>';
+											$output .= '</div>';
+										}
+										
+										break;
+								}
+								
                                 if(!empty($query))
                                 {
                                     $sql->query($query);
@@ -297,28 +336,28 @@ else
                         else
                         {
                             $output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-                            $output .= '<p>Ung&uuml;tiger Token.</p>';
+                            $output .= '<p>Ung&uuml;ltiger Token.</p>';
                             $output .= '</div>';
                         }
                     }
                     else
                     {
                         $output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-                        $output .= '<p>Ung&uuml;tiger Token.</p>';
+                        $output .= '<p>Ung&uuml;ltiger Token.</p>';
                         $output .= '</div>';
                     }
                 }
                 else
                 {
                     $output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-                    $output .= '<p>Ung&uuml;tige Aktion.</p>';
+                    $output .= '<p>Ung&uuml;ltige Aktion.</p>';
                     $output .= '</div>';
                 }
             }
             else
             {
                 $output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-                $output .= '<p>Ung&uuml;tige Aktion.</p>';
+                $output .= '<p>Ung&uuml;ltige Aktion.</p>';
                 $output .= '</div>';
             }
         }
@@ -335,13 +374,27 @@ else
 ?>
 <!DOCTYPE HTML>
 <html lang="de">
-    <head>
-        <title>WebBar | User &auml;ndern</title>
-        <?php
-        require($_SERVER['DOCUMENT_ROOT'].'/include/head.inc.php');
-        ?>
-    </head>
-    <body>
-
-    </body>
+	<head>
+		<title>WebBar | Account &auml;ndern</title>
+		<?php
+		require($_SERVER['DOCUMENT_ROOT'].'/include/head.inc.php');
+		?>
+	</head>
+	<body class="gradient-blue">
+		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+			<div class="w3-container">
+				<div class="w3-container w3-white">
+					<div class="w3-center">
+						<h3>Account &auml;ndern</h3>
+					</div>
+					<?php
+					if(!empty($output))
+					{
+						echo $output;
+					}
+					?>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>

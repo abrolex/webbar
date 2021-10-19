@@ -12,7 +12,9 @@ else
 {
 	require($_SERVER['DOCUMENT_ROOT'].'/include/config.inc.php');
 	
-	require($_SERVER['DOCUMENT_ROOT'].'/include/functions.inc.php');
+	require($_SERVER['DOCUMENT_ROOT'].'/include/randomstr.inc.php');
+	
+	require($_SERVER['DOCUMENT_ROOT'].'/include/passwdhash.inc.php');
 
 	$output = '';
 

@@ -3,9 +3,9 @@ session_start();
 
 session_regenerate_id();
 
-if(!empty($_SESSION['admin_login']))
+if(!empty($_SESSION['user_login']))
 {
-	header('location:http://'.$_SERVER['HTTP_HOST'].'/admin/');
+	header('location:http://'.$_SERVER['HTTP_HOST'].'/');
 	exit;
 }
 else
@@ -57,7 +57,7 @@ else
 								else
 								{
 									$query = sprintf("
-									SELECT user_id,user_password,user_salt,user_active,user_admin
+									SELECT user_id,user_password,user_salt,user_active
 									FROM user
 									WHERE user_email = '%s';",
 									$sql->real_escape_string($email));
@@ -68,30 +68,21 @@ else
 									{
 										if($row['user_active'])
 										{
-											if($row['user_admin'])
+											if($row['user_password'] == passwdhash($row['user_salt'],$_POST['user_password']))
 											{
-												if($row['user_password'] == passwdhash($row['user_salt'],$_POST['user_password']))
-												{
-													session_start();
+												session_start();
 													
-													$user_csrf_token = randomstr(10);
+												$user_csrf_token = randomstr(10);
 													
-													$_SESSION = array('admin_login' => true,'user_id' => $row['user_id'],'user_csrf_token' => $user_csrf_token);
+												$_SESSION = array('user_login' => true,'user_id' => $row['user_id'],'user_csrf_token' => $user_csrf_token);
 													
-													header('location:http://'.$_SERVER['HTTP_HOST'].'/admin/index.php');
-													exit;
-												}
-												else
-												{
-													$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-													$output .= '<p>Sie haben ein falsches Passwort eingegeben.</p>';
-													$output .= '</div>';
-												}
+												header('location:http://'.$_SERVER['HTTP_HOST'].'/');
+												exit;
 											}
 											else
 											{
 												$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-												$output .= '<p>Sie besitzen keine Berechtigungen f&uuml;r diesen Bereich.</p>';
+												$output .= '<p>Sie haben ein falsches Passwort eingegeben.</p>';
 												$output .= '</div>';
 											}
 										}
@@ -149,7 +140,7 @@ else
 	
 	if($showform)
 	{
-		$output .= '<form action="login.php" method="post">';
+		$output .= '<form action="/login/" method="post">';
 		$output .= '<p><label for="user_email">E-Mail-Adresse</label><input class="w3-input w3-border" type="email" name="user_email" placeholder="E-Mail-Adresse" ';
 		
 		if(!empty($email))
@@ -163,11 +154,11 @@ else
 		$output .= '</form>';
 	}
 }
-?>					
+?>
 <!DOCTYPE HTML>
 <html lang="de">
 	<head>
-		<title>WebBar | Admin | Login</title>
+		<title>WebBar | Login</title>
 		<?php
 		require($_SERVER['DOCUMENT_ROOT'].'/include/head.inc.php');
 		?>
@@ -175,9 +166,17 @@ else
 	<body class="gradient-blue">
 		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
 			<div class="w3-container">
+				<div class="w3-row">
+					<div class="w3-col s6 m6 l6">
+						<a class="w3-card w3-btn w3-block w3-padding-large blue" href="#">Login</a>
+					</div>
+					<div class="w3-col s6 m6 l6">
+						<a class="w3-btn w3-block w3-padding-large grey" href="/register/">Registrierung</a>
+					</div>
+				</div>
 				<div class="w3-container w3-white">
 					<div class="w3-center">
-						<h3>AdminLogin</h3>
+						<h3>Login</h3>
 						<p><i class="fas fa-user fa-3x"></i></p>
 					</div>
 					<?php

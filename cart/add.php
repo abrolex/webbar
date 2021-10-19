@@ -243,7 +243,7 @@ else
 	}
 }
 
-$output .= '<p><a class="w3-btn w3-padding-large w3-block blue" href="/">weiter einkaufen <i class="fas fa-arrow-right"></i></a></p>';	
+$output .= '<p><a class="w3-btn w3-padding-large w3-block blue" href="/">Startseite <i class="fas fa-home"></i></a></p>';	
 ?>										
 <!DOCTYPE HTML>
 <html lang="de">

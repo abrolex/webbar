@@ -188,6 +188,6 @@ else
 				</div>
 			</div>
 		</div>
-		<script type="text/javascript" src="/js/admin_view.js"></script>
+		<script type="text/javascript" src="/js/view.js"></script>
 	</body>
 </html>
