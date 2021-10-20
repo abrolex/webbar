@@ -39,8 +39,9 @@ else
 				if(preg_match('/[^0-9]/',$_GET['order_id']) == 0)
 				{
 					$query = sprintf("
-					SELECT order_id,order_content,order_time,order_status
+					SELECT order_id,order_content,order_time,order_status,location_name
 					FROM orders
+					INNER JOIN location ON order_location_id = location_id
 					WHERE order_id = '%s'
 					AND order_user_id = '%s';",
 					$sql->real_escape_string($_GET['order_id']),
@@ -68,7 +69,22 @@ else
 						$output .= '</div>';
 						
 						$output .= '<h4>Bestellnummer #'.$row['order_id'].'</h4>';
-						$output .= '<p>'.$order_time.'</p>';
+						$output .= '<div class="w3-row w3-section">';
+						$output .= '<div class="w3-col s3 m2 l2">';
+						$output .= '<button class="w3-btn w3-block blue"><i class="fas fa-clock"></i></button>'; 
+						$output .= '</div>';
+						$output .= '<div class="w3-col s9 m10 l10">';
+						$output .= '<button class="w3-btn w3-block w3-left-align grey">'.$order_time.'</button>';
+						$output .= '</div>';
+						$output .= '</div>';
+						$output .= '<div class="w3-row w3-section">';
+						$output .= '<div class="w3-col s3 m2 l2">';
+						$output .= '<button class="w3-btn w3-block blue"><i class="fas fa-map-marker-alt"></i></button>'; 
+						$output .= '</div>';
+						$output .= '<div class="w3-col s9 m10 l10">';
+						$output .= '<button class="w3-btn w3-block w3-left-align grey">'.$row['location_name'].'</button>';
+						$output .= '</div>';
+						$output .= '</div>';
 						$output .= '<div class="w3-section scroll-h">';
 						
 						for($i = 0;$i < count($order_content); $i++)
@@ -76,7 +92,7 @@ else
 							$price = number_format($order_content[$i]['article_price']*$order_content[$i]['article_amount'],'2','.','.');
 							
 							$output .= '<div class="w3-border">';
-							$output .= '<h4>'.$order_content[$i]['article_name'].'</h4>';
+							$output .= '<p class="w3-large">'.$order_content[$i]['article_name'].'</p>';
 							$output .= '<p>'.$order_content[$i]['article_amount'].'x '.$order_content[$i]['article_variant'].' '.$order_content[$i]['article_price'].' &euro;</p>';
 							$output .= '<p><button class="w3-btn w3-padding-large w3-border grey">Artikelpreis: '.$price.' &euro;</button></p>';
 							$output .= '</div>';

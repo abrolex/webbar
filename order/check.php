@@ -108,7 +108,7 @@ else
 						$price = number_format($price_arr[$cart[$i]['article_variant']]*$cart[$i]['article_amount'],2,'.','.');
 				
 						$output .= '<div class="w3-border">';
-						$output .= '<h4>'.$row['article_name'].'</h4>';
+						$output .= '<p class="w3-large">'.$row['article_name'].'</p>';
 						$output .= '<p>'.$cart[$i]['article_amount'].'x '.$variant_arr[$cart[$i]['article_variant']].' '.$price_arr[$cart[$i]['article_variant']].' &euro;</p>';
 						$output .= '<p><button class="w3-btn w3-padding-large w3-border grey">Artikelpreis: '.$price.' &euro;</button></p>';
 						$output .= '</div>';

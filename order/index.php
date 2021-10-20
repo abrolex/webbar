@@ -75,10 +75,10 @@ else
 									$order_time = date('d.m.Y H:i:s',strtotime($row['order_time']));
 									
 									$output .= '<div class="w3-row w3-section">';
-									$output .= '<div class="w3-col s9 m9 l9">';
+									$output .= '<div class="w3-col s9 m10 l10">';
 									$output .= '<button class="w3-btn w3-block grey">'.$order_time.'</button>';
 									$output .= '</div>';
-									$output .= '<div class="w3-col s3 m3 l3">';
+									$output .= '<div class="w3-col s3 m2 l2">';
 									$output .= '<a class="w3-btn w3-block blue" href="view.php?order_id='.$row['order_id'].'"><i class="fas fa-arrow-right"></i></a>';
 									$output .= '</div>';
 									$output .= '</div>';

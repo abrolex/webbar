@@ -39,7 +39,7 @@ else
 					else
 					{
 						$query = sprintf("
-						SELECT user_credit,user_cart
+						SELECT user_credit,user_cart,user_location_id
 						FROM user
 						WHERE user_id = '%s';",
 						$sql->real_escape_string($_SESSION['user_id']));
@@ -50,6 +50,8 @@ else
 						{
 							$user_credit = $row['user_credit'];
 							
+							$location_id = $row['user_location_id'];
+
 							$cart = json_decode($row['user_cart'],true);
 							
 							$cart_count = count($cart);
@@ -121,10 +123,11 @@ else
 									
 										$query = sprintf("
 										INSERT INTO orders
-										(order_user_id,order_content,order_time)
+										(order_user_id,order_location_id,order_content,order_time)
 										VALUES
-										('%s','%s','%s');",
+										('%s','%s','%s','%s');",
 										$sql->real_escape_string($_SESSION['user_id']),
+										$sql->real_escape_string($location_id),
 										$sql->real_escape_string(json_encode($order_content)),
 										$sql->real_escape_string($order_time));
 										
@@ -140,6 +143,7 @@ else
 											$output .= '<div class="w3-panel w3-center w3-border w3-border-green w3-text-green">';
 											$output .= '<p>Ihre Bestellung wurde erfolgreich entgegen genommen und wird bald bearbeitet :)</p>';
 											$output .= '</div>';
+											$output .= '<p><a class="w3-btn w3-block w3-padding-large blue" href="/order/?s=0&ps=5">Meine Bestellungen <i class="fas fa-list"></i></a></p>';
 										}
 										else
 										{

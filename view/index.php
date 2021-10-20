@@ -76,10 +76,51 @@ else
 								{
 									array_push($last_view_new,$val);
 								}
+
+								$last_view = $last_view_new;
+							}
+
+							if(in_array($_GET['article_id'],$last_view) == 0)
+							{
+								if(count($last_view) == 6)
+								{
+									unset($last_view[0]);
+
+									$last_view_new = array();
+
+									foreach($last_view as $val)
+									{
+										array_push($last_view_new,$val);
+									}
+								
+									$last_view = $last_view_new;
+
+									array_push($last_view,$_GET['article_id']);
+								}
+								else
+								{
+									array_push($last_view,$_GET['article_id']);
+								}
 							}
 						}
+						else
+						{
+							$last_view = array();
+
+							array_push($last_view,$_GET['article_id']);
+						}
+
+						setcookie('wb_last_view',json_encode($last_view),time()+86400,'/');
 					}
-					
+					else
+					{
+						$last_view = array();
+
+						array_push($last_view,$_GET['article_id']);
+
+						setcookie('wb_last_view',json_encode($last_view),time()+86400,'/');
+					}
+
 					$variant_arr = explode('/',$row['article_variant']);
 						
 					$price_arr = explode('/',$row['article_price']);

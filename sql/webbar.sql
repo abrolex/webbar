@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 20. Okt 2021 um 15:06
+-- Erstellungszeit: 20. Okt 2021 um 22:29
 -- Server Version: 5.6.13
 -- PHP-Version: 5.4.17
 
@@ -49,7 +49,7 @@ INSERT INTO `article` (`article_id`, `article_name`, `article_variant`, `article
 (7, 'Miami Dolphin', '0.4L', '5.00', 'Miami Dolphin Cocktail'),
 (8, 'Sportsman', '0.4L/0.3L', '5.00/3.00', 'Sportsman Cocktail alkoholfrei'),
 (9, 'Pina Colada', '0.4L', '5.00', 'Pina Colada Cocktail Ananas Kokos weiÃŸer Rum brauner Rum'),
-(10, 'Lynchburg Lemonade', '0.4L', '6.00', 'Lynchburg Lemonade Sprite Whisky Zitrone Limetten OrangenlikÃ¶r');
+(10, 'Lynchburg Lemonade', '0.4L', '6.00', 'Lynchburg Lemonade Cocktail Sprite Whisky Zitrone Limetten OrangenlikÃ¶r\n');
 
 -- --------------------------------------------------------
 
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `cart` (
 --
 
 INSERT INTO `cart` (`cart_id`, `cart_content`, `cart_time`) VALUES
-('934e0317acefe219dce1409d72301c7fcbf58614a45b98c60ef262254fb29845', '[]', '2021-10-20 14:14:40');
+('dd84a7b12a8f04bc1782288d2fe271e88c95e71ebeea77bcb9beb324fbe75c40', '[]', '2021-10-20 18:18:10');
 
 -- --------------------------------------------------------
 
@@ -103,24 +103,20 @@ INSERT INTO `location` (`location_id`, `location_name`) VALUES
 CREATE TABLE IF NOT EXISTS `orders` (
   `order_id` int(255) NOT NULL AUTO_INCREMENT,
   `order_user_id` int(255) NOT NULL,
+  `order_location_id` int(255) NOT NULL,
   `order_content` longtext NOT NULL,
-  `order_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `order_time` timestamp NULL DEFAULT NULL,
   `order_status` enum('0','1','2') NOT NULL DEFAULT '0',
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
 --
 -- Daten für Tabelle `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `order_user_id`, `order_content`, `order_time`, `order_status`) VALUES
-(1, 2, '[{"article_id":"4","article_name":"Coconut Kiss","article_variant":"0.4L","article_price":"5.00","article_amount":"1"}]', '2021-10-19 13:24:28', '1'),
-(2, 2, '[{"article_id":"5","article_name":"Swimming Pool","article_variant":"0.4L","article_price":"5.00","article_amount":"1"}]', '2021-10-19 13:52:49', '0'),
-(3, 2, '[{"article_id":"8","article_name":"Sportsman","article_variant":"0.4L","article_price":"5.00","article_amount":"1"}]', '2021-10-19 13:53:01', '0'),
-(4, 2, '[{"article_id":"8","article_name":"Sportsman","article_variant":"0.4L","article_price":"5.00","article_amount":"1"}]', '2021-10-19 13:53:11', '0'),
-(5, 2, '[{"article_id":"6","article_name":"Strawberry Kiss","article_variant":"0.4L","article_price":"5.00","article_amount":"1"}]', '2021-10-19 13:53:31', '0'),
-(6, 2, '[{"article_id":"7","article_name":"Miami Dolphin","article_variant":"0.4L","article_price":"5.00","article_amount":"1"}]', '2021-10-19 13:54:05', '0'),
-(7, 2, '[{"article_id":"4","article_name":"Coconut Kiss","article_variant":"0.4L","article_price":"5.00","article_amount":"1"},{"article_id":"6","article_name":"Strawberry Kiss","article_variant":"0.4L","article_price":"5.00","article_amount":"4"},{"article_id":"8","article_name":"Sportsman","article_variant":"0.4L","article_price":"5.00","article_amount":"1"}]', '2021-10-19 14:36:47', '2');
+INSERT INTO `orders` (`order_id`, `order_user_id`, `order_location_id`, `order_content`, `order_time`, `order_status`) VALUES
+(8, 2, 0, '[{"article_id":"4","article_name":"Coconut Kiss","article_variant":"0.4L","article_price":"5.00","article_amount":2},{"article_id":"10","article_name":"Lynchburg Lemonade","article_variant":"0.4L","article_price":"6.00","article_amount":"1"}]', '2021-10-20 18:05:10', '0'),
+(9, 2, 6, '[{"article_id":"7","article_name":"Miami Dolphin","article_variant":"0.4L","article_price":"5.00","article_amount":"1"},{"article_id":"4","article_name":"Coconut Kiss","article_variant":"0.4L","article_price":"5.00","article_amount":"1"}]', '2021-10-20 20:16:44', '0');
 
 -- --------------------------------------------------------
 
@@ -153,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`user_id`, `user_email`, `user_username`, `user_credit`, `user_password`, `user_salt`, `user_cart`, `user_location_id`, `user_passwordtime`, `user_passwordcode`, `user_activationtime`, `user_activationcode`, `user_active`, `user_admin`, `user_keywords`) VALUES
 (1, 'wbadmin@gmail.com', 'wbadmin', 99.99, 'b5fdb4951be86a26b0fbff64d740393b823fc2ad187b072ab499601377c1e71b', '5OWEct3xug', '[]', 1, NULL, NULL, NULL, NULL, '1', '1', 'wbadmin@gmail.com wbadmin'),
-(2, 'alexanderbrosch1@gmail.com', 'abrolex', 69.99, 'ccd05dddcdf34ec7e733cce30904a25aa00dcc31d98559b5865bfbe87ae97045', 'M0uhEkKmti', '[]', 6, NULL, NULL, NULL, NULL, '1', '0', 'alexanderbrosch1@gmail.com abrolex');
+(2, 'alexanderbrosch1@gmail.com', 'Pimmelkopf', 43.99, 'ccd05dddcdf34ec7e733cce30904a25aa00dcc31d98559b5865bfbe87ae97045', 'M0uhEkKmti', '[]', 7, NULL, NULL, NULL, NULL, '1', '0', 'alexanderbrosch1@gmail.com Pimmelkopf');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

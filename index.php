@@ -25,6 +25,76 @@ else
 		
 		require($_SERVER['DOCUMENT_ROOT'].'/include/cookie_cart.inc.php');
 	}
+
+	if(!empty($_COOKIE['wb_last_view']))
+	{
+		$last_view = json_decode($_COOKIE['wb_last_view'],true);
+						
+		if(is_array($last_view))
+		{
+			$last_view_error = 0;
+						
+			for($i = 0; $i < count($last_view); $i++)
+			{
+				if(preg_match('/[^0-9]/',$last_view[$i]) != 0)
+				{
+					$last_view_error = 1;
+									
+					unset($last_view[$i]);
+				}
+			}
+							
+			if(!empty($last_view_error))
+			{
+				$last_view_new = array();
+									
+				foreach($last_view as $val)
+				{
+					array_push($last_view_new,$val);
+				}
+
+				$last_view = $last_view_new;
+			}
+
+			$output  = '<div class="w3-panel w3-white">'; 
+			$output .= '<h4>Zuletzt angesehen <i class="fas fa-arrow-right"></i></h4>';
+			$output .= '<div class="w3-section scroll-h">';
+
+			for($i = 0; $i < count($last_view); $i++)
+			{
+				$query = sprintf("
+				SELECT article_name
+				FROM article
+				WHERE article_id = '%s';",
+				$sql->real_escape_string($last_view[$i]));
+
+				$result = $sql->query($query);
+
+				if($row = $result->fetch_array(MYSQLI_ASSOC))
+				{
+					if($i == 3)
+					{
+						$output .= '</div>';
+						$output .= '<div class="w3-section scroll-h">';
+					}
+
+					$output .= '<div class="scroll-obj" style="width:100%;">';
+					$output .= '<div class="w3-row">';
+					$output .= '<div class="w3-col s9 m9 l9">';
+					$output .= '<button class="w3-btn w3-block grey">'.$row['article_name'].'</button>';
+					$output .= '</div>';
+					$output .= '<div class="w3-col s3 m3 l3">';
+					$output .= '<a class="w3-btn w3-block blue" href="/view/?article_id='.$last_view[$i].'"><i class="fas fa-arrow-right"></i></a>';
+					$output .= '</div>';
+					$output .= '</div>';
+					$output .= '</div>';
+				}
+			}
+
+			$output .= '</div>';
+			$output .= '</div>';
+		}
+	}
 }
 ?>
 <!DOCTYPE HTML>
@@ -69,7 +139,14 @@ else
 					</form>
 					<p><a class="w3-btn w3-block w3-padding-large blue" href="register/">Account erstellen <i class="fas fa-user-plus"></i></a></p>
 				</div>
+				<?php
+				if(!empty($output))
+				{
+					echo $output;
+				}
+				?>
 			</div>
 		</div>
+		<script type="text/javascript" src="/js/autoscroll.js"></script>
 	</body>
 </html>
