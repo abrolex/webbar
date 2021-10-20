@@ -69,13 +69,94 @@ else
 										if($row['user_active'])
 										{
 											if($row['user_password'] == passwdhash($row['user_salt'],$_POST['user_password']))
-											{
-												session_start();
-													
+											{	
 												$user_csrf_token = randomstr(10);
-													
+												
+												session_start();
+												
 												$_SESSION = array('user_login' => true,'user_id' => $row['user_id'],'user_csrf_token' => $user_csrf_token);
+												
+												require($_SERVER['DOCUMENT_ROOT'].'/include/cookie_cart.inc.php');
+												
+												if(!empty($cart))
+												{
+													$cookie_cart = $cart;
 													
+													$cookie_cart_count = count($cookie_cart);
+													
+													require($_SERVER['DOCUMENT_ROOT'].'/include/user_cart.inc.php');
+													
+													if(!empty($cart))
+													{
+														$user_cart = $cart;
+														
+														$user_cart_count = count($user_cart);
+														
+														for($i = 0; $i < $cookie_cart_count; $i++)
+														{
+															$in_user_cart = 0;
+															
+															$cookie_article_id = $cookie_cart[$i]['article_id'];
+															
+															$cookie_article_variant = $cookie_cart[$i]['article_variant'];
+															
+															$cookie_article_amount = $cookie_cart[$i]['article_amount'];
+															
+															for($j = 0; $j < $user_cart_count; $j++)
+															{
+																$user_article_id = $user_cart[$j]['article_id'];
+															
+																$user_article_variant = $user_cart[$j]['article_variant'];
+															
+																$user_article_amount = $user_cart[$j]['article_amount'];
+																
+																if($cookie_article_id == $user_article_id && $cookie_article_variant == $user_article_variant)
+																{
+																	$in_user_cart = 1;
+																	
+																	$user_article_amount_new = $user_article_amount+$cookie_article_amount;
+																	
+																	if($user_article_amount_new > 99)
+																	{
+																		$user_article_amount_new = 99;
+																	}
+																	
+																	$user_cart[$j]['article_amount'] = $user_article_amount_new;
+																}
+															}
+															
+															if(empty($in_user_cart))
+															{
+																array_push($user_cart,$cookie_cart[$i]);
+															}
+														}
+														
+														$cart = $user_cart;
+													}
+													else
+													{
+														$cart = $cookie_cart;
+													}
+													
+													$query = sprintf("
+													UPDATE cart
+													SET cart_content = '%s'
+													WHERE cart_id = '%s';",
+													$sql->real_escape_string(json_encode(array())),
+													$sql->real_escape_string($_COOKIE['wb_cart_id']));
+													
+													$sql->query($query);
+													
+													$query = sprintf("
+													UPDATE user
+													SET user_cart = '%s'
+													WHERE user_id = '%s';",
+													$sql->real_escape_string(json_encode($cart)),
+													$sql->real_escape_string($_SESSION['user_id']));
+													
+													$sql->query($query);
+												}					
+												
 												header('location:http://'.$_SERVER['HTTP_HOST'].'/');
 												exit;
 											}
@@ -166,6 +247,9 @@ else
 	<body class="gradient-blue">
 		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
 			<div class="w3-container">
+				<div class="w3-center">
+					<a href="/"><h2>WebBar</h2></a>
+				</div>
 				<div class="w3-row">
 					<div class="w3-col s6 m6 l6">
 						<a class="w3-card w3-btn w3-block w3-padding-large blue" href="#">Login</a>

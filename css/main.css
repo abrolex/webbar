@@ -2,6 +2,9 @@ html,body {
 height:100%;
 overflow:auto;
 }
+a {
+text-decoration:none;
+}
 .gradient-blue {
 background: linear-gradient(135deg, #356aa0 0%,#000000 100%);
 color:#ffffff;

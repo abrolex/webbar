@@ -50,6 +50,36 @@ else
 					
 				if($row = $result->fetch_array(MYSQLI_ASSOC))
 				{
+					if(!empty($_COOKIE['wb_last_view']))
+					{
+						$last_view = json_decode($_COOKIE['wb_last_view'],true);
+						
+						if(is_array($last_view))
+						{
+							$last_view_error = 0;
+						
+							for($i = 0; $i < count($last_view); $i++)
+							{
+								if(preg_match('/[^0-9]/',$last_view[$i]) != 0)
+								{
+									$last_view_error = 1;
+									
+									unset($last_view[$i]);
+								}
+							}
+							
+							if(!empty($last_view_error))
+							{
+								$last_view_new = array();
+									
+								foreach($last_view as $val)
+								{
+									array_push($last_view_new,$val);
+								}
+							}
+						}
+					}
+					
 					$variant_arr = explode('/',$row['article_variant']);
 						
 					$price_arr = explode('/',$row['article_price']);
@@ -110,7 +140,7 @@ else
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
 		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
 			<div class="w3-center">
-				<h2>WebBar</h2>
+				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">
 					<a class="w3-bar-item w3-btn" href="/"><i class="fas fa-home fa-2x"></i></a>
 					<a class="w3-bar-item w3-btn" href="/user/"><i class="fas fa-user fa-2x"></i></a>

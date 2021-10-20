@@ -40,21 +40,45 @@ else
 			$cart = json_decode($row['user_cart'],true);
 				
 			$output .= '<h4>Account</h4>';
-			$output .= '<p>Username<button class="w3-btn w3-block w3-padding-large w3-left-align w3-border grey">'.$row['user_username'].'</button></p>';
-			$output .= '<p>E-Mail-Adresse<button class="w3-btn w3-block w3-padding-large w3-left-align w3-border grey">'.$row['user_email'].'</button></p>';
+			$output .= '<div class="w3-section w3-row">';
+			$output .= '<div class="w3-col s3 m2 l2">';
+			$output .= '<button class="w3-btn w3-block blue"><i class="fas fa-user"></i></button>';
+			$output .= '</div>';
+			$output .= '<div class="w3-col s9 m10 l10">';
+			$output .= '<button class="w3-btn w3-block w3-left-align grey">'.$row['user_username'].'</button>';
+			$output .= '</div>';
+			$output .= '</div>';
+			$output .= '<div class="w3-section w3-row">';
+			$output .= '<div class="w3-col s3 m2 l2">';
+			$output .= '<button class="w3-btn w3-block blue"><i class="fas fa-envelope"></i></button>';
+			$output .= '</div>';
+			$output .= '<div class="w3-col s9 m10 l10">';
+			$output .= '<button class="w3-btn w3-block w3-left-align grey">'.$row['user_email'].'</button>';
+			$output .= '</div>';
+			$output .= '</div>';
+			
 			
 			if($row['user_location_id'] != 1)
 			{
-				$output .= '<p>Lokation<button class="w3-btn w3-block w3-padding-large w3-left-align w3-border grey">'.$row['location_name'].'</button></p>';
+				$output .= '<div class="w3-section w3-row">';
+				$output .= '<div class="w3-col s3 m2 l2">';
+				$output .= '<button class="w3-btn w3-block blue"><i class="fas fa-map-marker-alt"></i></button>';
+				$output .= '</div>';
+				$output .= '<div class="w3-col s6 m7 l7">';
+				$output .= '<button class="w3-btn w3-block w3-left-align grey">'.$row['location_name'].'</button>';
+				$output .= '</div>';
+				$output .= '<div class="w3-col s3 m3 l3">';
+				$output .= '<a class="w3-btn w3-block blue" href="/user/"><i class="fas fa-edit"></i></a>';
+				$output .= '</div>';
+				$output .= '</div>';
 			}
 			else
 			{
 				$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
 				$output .= '<p>Sie haben noch keinen Tisch gew&auml;hlt.</p>';
 				$output .= '</div>';
+				$output .= '<p><a class="w3-btn w3-padding-large blue" href="/user/">&auml;ndern <i class="fas fa-edit"></i></a></p>';
 			}
-			
-			$output .= '<p><a class="w3-btn w3-padding-large blue" href="/user/">&auml;ndern <i class="fas fa-edit"></i></a></p>';
 			
 			if(!empty($cart))
 			{
@@ -63,6 +87,7 @@ else
 				$price_g = 0.00;
 				
 				$output .= '<h4>'.$cart_count.' Artikel im Warenkorb <a href="/cart/"><i class="fas fa-edit"></i></a></h4>';
+				$output .= '<div class="w3-section scroll-h">';
 				
 				for($i = 0;$i < $cart_count;$i++)
 				{
@@ -82,23 +107,17 @@ else
 				
 						$price = number_format($price_arr[$cart[$i]['article_variant']]*$cart[$i]['article_amount'],2,'.','.');
 				
-						$output .= '<p class="w3-large">'.$row['article_name'].'</p>';
-						$output .= '<div class="w3-section">';
-						$output .= 'Anzahl & Variante';
-						$output .= '<div class="w3-row-padding" style="padding:0;">';
-						$output .= '<div class="w3-col s6 m6 l6" style="padding-left:0;">';
-						$output .= '<button class="w3-btn w3-block w3-border">'.$cart[$i]['article_amount'].'x</button>';
+						$output .= '<div class="w3-border">';
+						$output .= '<h4>'.$row['article_name'].'</h4>';
+						$output .= '<p>'.$cart[$i]['article_amount'].'x '.$variant_arr[$cart[$i]['article_variant']].' '.$price_arr[$cart[$i]['article_variant']].' &euro;</p>';
+						$output .= '<p><button class="w3-btn w3-padding-large w3-border grey">Artikelpreis: '.$price.' &euro;</button></p>';
 						$output .= '</div>';
-						$output .= '<div class="w3-col s6 m6 l6" style="padding-right:0;">';
-						$output .= '<button class="w3-btn w3-block w3-border">'.$variant_arr[$cart[$i]['article_variant']].' '.$price_arr[$cart[$i]['article_variant']].' &euro;</button>';
-						$output .= '</div>';
-						$output .= '</div>';
-						$output .= '<p><button class="w3-btn w3-block w3-padding-large w3-border grey">Artikelpreis: '.$price.' &euro;</button></p>';
 						
 						$price_g = number_format($price+$price_g,2,'.','.');
 					}
 				}
 				
+				$output .= '</div>';
 				$output .= '<p><button class="w3-btn w3-block w3-padding-large w3-border grey">Summe: '.$price_g.' &euro;</button></p>';
 				
 				$credit_after = $user_credit-$price_g;
@@ -136,7 +155,7 @@ else
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
 		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
 			<div class="w3-center">
-				<h2>WebBar</h2>
+				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">
 					<a class="w3-bar-item w3-btn" href="/"><i class="fas fa-home fa-2x"></i></a>
 					<a class="w3-bar-item w3-btn" href="/user/"><i class="fas fa-user fa-2x"></i></a>

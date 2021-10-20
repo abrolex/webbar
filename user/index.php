@@ -82,23 +82,11 @@ else
 			$output .= '<p><button onclick="document.forms[1].submit();" class="w3-btn w3-padding-large blue" style="display:none;" name="save_btn" type="button">speichern <i class="fas fa-save"></i></button></p>';
 			$output .= '</form>';
 			
-			$output .= '<form action="change.php" method="post">';
 			$output .= '<div class="w3-section">';
 			$output .= 'E-Mail-Adresse';
-			$output .= '<div class="w3-row">';
-			$output .= '<div class="w3-col s9 m9 l9">';
-			$output .= '<input type="hidden" name="attr" value="email"/>';
-			$output .= '<input class="w3-border w3-input" name="attr_value" type="email" readonly="true" value="'.$user_email.'" placeholder="E-Mail-Adresse"/>';
-			$output .= '<input type="hidden" name="csrf_token" value="'.$_SESSION['user_csrf_token'].'"/>';
+			$output .= '<input class="w3-border w3-input" type="email" disabled="true" readonly="true" value="'.$user_email.'" placeholder="E-Mail-Adresse"/>';
 			$output .= '</div>';
-			$output .= '<div class="w3-col s3 m3 l3">';
-			$output .= '<button onclick="startEdit(2);" class="w3-btn w3-block w3-border border-blue blue" name="edit_btn" type="button"><i class="fas fa-edit"></i></button>';
-			$output .= '<button onclick="cancelEdit(2);" class="w3-btn w3-block w3-border w3-border-red w3-red" style="display:none;" name="cancel_btn" type="button"><i class="fas fa-times"></i></button>';
-			$output .= '</div>';
-			$output .= '</div>';
-			$output .= '</div>';
-			$output .= '<p><button onclick="document.forms[2].submit();" class="w3-btn w3-padding-large blue" style="display:none;" name="save_btn" type="button">speichern <i class="fas fa-save"></i></button></p>';
-			$output .= '</form>';
+			
 			
 			$output .= '<form action="change.php" method="post">';
 			$output .= '<div class="w3-section">';
@@ -113,12 +101,29 @@ else
 			$output .= '<input type="hidden" name="csrf_token" value="'.$_SESSION['user_csrf_token'].'"/>';
 			$output .= '</div>';
 			$output .= '<div class="w3-col s3 m3 l3">';
-			$output .= '<button onclick="startEdit(3);" class="w3-btn w3-block w3-border border-blue blue" name="edit_btn" type="button"><i class="fas fa-edit"></i></button>';
-			$output .= '<button onclick="cancelEdit(3);" class="w3-btn w3-block w3-border w3-border-red w3-red" style="display:none;" name="cancel_btn" type="button"><i class="fas fa-times"></i></button>';
+			$output .= '<button onclick="startEdit(2);" class="w3-btn w3-block w3-border border-blue blue" name="edit_btn" type="button"><i class="fas fa-edit"></i></button>';
+			$output .= '<button onclick="cancelEdit(2);" class="w3-btn w3-block w3-border w3-border-red w3-red" style="display:none;" name="cancel_btn" type="button"><i class="fas fa-times"></i></button>';
 			$output .= '</div>';
 			$output .= '</div>';
 			$output .= '</div>';
-			$output .= '<p><button onclick="document.forms[3].submit();" class="w3-btn w3-padding-large blue" style="display:none;" name="save_btn" type="button">speichern <i class="fas fa-save"></i></button></p>';
+			$output .= '<p><button onclick="document.forms[2].submit();" class="w3-btn w3-padding-large blue" style="display:none;" name="save_btn" type="button">speichern <i class="fas fa-save"></i></button></p>';
+			$output .= '</form>';
+			
+			$output .= '<form action="change.php" method="post">';
+			$output .= '<div class="w3-section">';
+			$output .= 'Guthaben';
+			$output .= '<div class="w3-row">';
+			$output .= '<div class="w3-col s9 m9 l9">';
+			$output .= '<input type="hidden" name="attr" value="guthaben"/>';
+			$output .= '<input class="w3-input w3-border" type="text" disabled="true" value="'.$user_credit.'"/>';
+			$output .= '<input type="hidden" name="attr_value" value="info" placeholder="neues Passwort"/>';
+			$output .= '<input type="hidden" name="csrf_token" value="'.$_SESSION['user_csrf_token'].'"/>';
+			$output .= '</div>';
+			$output .= '<div class="w3-col s3 m3 l3">';
+			$output .= '<button class="w3-btn w3-block w3-border border-blue blue" type="submit"><i class="fas fa-edit"></i></button>';
+			$output .= '</div>';
+			$output .= '</div>';
+			$output .= '</div>';
 			$output .= '</form>';
 			
 			$output .= '<form action="change.php" method="post">';
@@ -154,7 +159,7 @@ else
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
 		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
 			<div class="w3-center">
-				<h2>WebBar</h2>
+				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">
 					<a class="w3-bar-item w3-btn" href="/"><i class="fas fa-home fa-2x"></i></a>
 					<a class="w3-bar-item w3-btn active" href="#"><i class="fas fa-user fa-2x"></i></a>

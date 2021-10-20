@@ -259,6 +259,9 @@ else
 	<body class="gradient-blue">
 		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
 			<div class="w3-container">
+				<div class="w3-center">
+					<a href="/"><h2>WebBar</h2></a>
+				</div>
 				<div class="w3-row">
 					<div class="w3-col s6 m6 l6">
 						<a class="w3-btn w3-block w3-padding-large grey" href="/login/">Login</a>

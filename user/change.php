@@ -30,7 +30,7 @@ else
         {  
             if(preg_match('/[^a-z]/',$_POST['attr']) == 0)
             {
-                $aktions = array('username','email','location','password');
+                $aktions = array('username','location','guthaben','password');
 
                 if(in_array($_POST['attr'],$aktions))
                 {
@@ -96,6 +96,15 @@ else
                                                         $sql->real_escape_string($_POST['attr_value']),
                                                         $sql->real_escape_string(implode(" ",$user_keywords)),
                                                         $sql->real_escape_string($_SESSION['user_id']));
+														
+														$sql->query($query);
+														
+														if($sql->affected_rows == 1)
+														{
+															$output .= '<div class="w3-panel w3-border w3-border-green w3-text-green">';
+															$output .= '<p>Ihr Username wurde erfolgreich ge&auml;ndert.</p>';
+															$output .= '</div>';
+														}
                                                     }
                                                     else
                                                     {
@@ -124,92 +133,6 @@ else
                                         break;
                                     
                                     case $aktions[1]:
-
-                                        if(preg_match('/[^a-zA-Z0-9\.\-\_\@]/',$_POST['attr_value']) == 0)
-                                        {
-                                            $pos = strpos($_POST['attr_value'],'@');
-
-                                            if($pos != false)
-                                            {
-                                                $provider = substr($_POST['attr_value'],$pos+1);
-
-                                                if(in_array($provider,$app_email_provider))
-                                                {
-                                                    $query = sprintf("
-                                                    SELECT user_id
-                                                    FROM user
-                                                    WHERE user_email = '%s';",
-                                                    $sql->real_escape_string($_POST['attr_value']));
-    
-                                                    $result = $sql->query($query);
-    
-                                                    if($row = $result->fetch_array(MYSQLI_ASSOC))
-                                                    {
-                                                        $query = '';
-    
-                                                        $output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-                                                        $output .= '<p>Der gew&auml;hlte E-Mail-Adresse ist bereits vorhanden.</p>';
-                                                        $output .= '</div>';
-                                                    }
-                                                    else
-                                                    {
-                                                        $query = sprintf("
-                                                        SELECT user_keywords
-                                                        FROM user
-                                                        WHERE user_id = '%s';",
-                                                        $sql->real_escape_string($_SESSION['user_id']));
-    
-                                                        $result = $sql->query($query);
-    
-                                                        if($row = $result->fetch_array(MYSQLI_ASSOC))
-                                                        {
-                                                            $user_keywords = explode(" ",$row['user_keywords']);
-    
-                                                            $user_keywords[0] = $_POST['attr_value'];
-    
-                                                            $query = sprintf("
-                                                            UPDATE user
-                                                            SET user_email = '%s',
-                                                            user_keywords = '%s'
-                                                            WHERE user_id = '%s';",
-                                                            $sql->real_escape_string($_POST['attr_value']),
-                                                            $sql->real_escape_string(implode(" ",$user_keywords)),
-                                                            $sql->real_escape_string($_SESSION['user_id']));
-                                                        }
-                                                        else
-                                                        {
-                                                            $query = '';
-
-                                                            $output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-                                                            $output .= '<p>Es ist ein Fehler aufgetreten.</p>';
-                                                            $output .= '</div>';
-                                                        }
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    $output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-                                                    $output .= '<p>Sie verwenden einen nicht zu&auml;ssigen E-Mail-Provider.</p>';
-                                                    $output .= '</div>';
-                                                }
-                                            }
-                                            else
-                                            {
-                                                $output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-                                                $output .= '<p>In ihrer E-Mail-Adresse fehlt das @-Zeichen.</p>';
-                                                $output .= '</div>';
-                                            }
-                                        }
-                                        else
-                                        {
-                                            $output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-                                            $output .= '<p>Verwenden Sie nur folgende Zeichen in ihrer E-Mail-Adresse: a-z, A-Z, 0-9, @_-</p>';
-                                            $output .= '</div>';  
-                                        }
-
-                                        break;
-                                    
-                                    case $aktions[2]:
 
                                         if(preg_match('/[^0-9]/',$_POST['attr_value']) == 0)
                                         {
@@ -241,6 +164,15 @@ else
                                                         WHERE user_id = '%s';",
                                                         $sql->real_escape_string($_POST['attr_value']),
                                                         $sql->real_escape_string($_SESSION['user_id']));
+														
+														$sql->query($query);
+														
+														if($sql->affected_rows == 1)
+														{
+															$output .= '<div class="w3-panel w3-border w3-border-green w3-text-green">';
+															$output .= '<p>Ihre Lokation wurde erfolgreich ge&auml;ndert.</p>';
+															$output .= '</div>';
+														}
                                                     }
                                                     else
                                                     {
@@ -278,6 +210,32 @@ else
 
                                         break;
 										
+									case $aktions[2]:
+									
+										if(preg_match('/[^a-z]/',$_POST['attr_value']) == 0)
+										{
+											if($_POST['attr_value'] == 'info')
+											{
+												$output .= '<div class="w3-panel">';
+												$output .= '<p>Sie k&ouml;nnen ihr Guthaben nur durch Einzahlung von Bargeld aufstocken.</p>';
+												$output .= '</div>';
+											}
+											else
+											{
+												$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+												$output .= '<p>Sie k&ouml;nnen nur eine Info erhalten.</p>';
+												$output .= '</div>';
+											}
+										}
+										else
+										{
+											$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+											$output .= '<p>Sie k&ouml;nnen nur eine Info erhalten.</p>';
+											$output .= '</div>';
+										}
+										
+										break;
+					
 									case $aktions[3]:
 									
 										if(strlen($_POST['attr_value']) >= 8)
@@ -296,6 +254,15 @@ else
 												$sql->real_escape_string($password),
 												$sql->real_escape_string($salt),
 												$sql->real_escape_string($_SESSION['user_id']));
+												
+												$sql->query($query);
+												
+												if($sql->affected_rows == 1)
+												{
+													$output .= '<div class="w3-panel w3-border w3-border-green w3-text-green">';
+													$output .= '<p>Ihr Passwort wurde erfolgreich ge&auml;ndert.</p>';
+													$output .= '</div>';
+												}
 											}
 											else
 											{
@@ -313,24 +280,6 @@ else
 										
 										break;
 								}
-								
-                                if(!empty($query))
-                                {
-                                    $sql->query($query);
-
-                                    if($sql->affected_rows == 1)
-                                    {
-                                        $output  = '<div class="w3-panel w3-border w3-border-green w3-text-green">';
-                                        $output .= '<p>Ihr Account wurde erfolgreich gespeichert.</p>';
-                                        $output .= '</div>'; 
-                                    }
-                                    else
-                                    {
-                                        $output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-                                        $output .= '<p>Ihr Account konnte nicht gespeichert werden.</p>';
-                                        $output .= '</div>';
-                                    }
-                                }
                             }
                         }
                         else
@@ -383,6 +332,9 @@ else
 	<body class="gradient-blue">
 		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
 			<div class="w3-container">
+				<div class="w3-center">
+					<a href="/"><h2>WebBar</h2></a>
+				</div>
 				<div class="w3-container w3-white">
 					<div class="w3-center">
 						<h3>Account &auml;ndern</h3>

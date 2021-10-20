@@ -26,10 +26,6 @@ else
 			{
 				if($_SESSION['user_csrf_token'] == $_GET['csrf_token'])
 				{
-					if(!empty($_COOKIE['wb_cart_id']))
-					{
-						setcookie('wb_cart_id','',time()-1,'/');
-					}
 					session_destroy();
 						
 					$output .= '<div class="w3-panel w3-border w3-border-green w3-text-green">';
@@ -72,6 +68,9 @@ else
 	<body class="gradient-blue">
 		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
 			<div class="w3-container">
+				<div class="w3-center">
+					<a href="/"><h2>WebBar</h2></a>
+				</div>
 				<div class="w3-container w3-white">
 					<div class="w3-center">
 						<h3>Logout</h3>

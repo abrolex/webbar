@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 19. Okt 2021 um 15:04
+-- Erstellungszeit: 20. Okt 2021 um 15:06
 -- Server Version: 5.6.13
 -- PHP-Version: 5.4.17
 
@@ -68,9 +68,7 @@ CREATE TABLE IF NOT EXISTS `cart` (
 --
 
 INSERT INTO `cart` (`cart_id`, `cart_content`, `cart_time`) VALUES
-('791b9e79260511f50807e5f80aa8bd52111b76b93c186174070909e5d8d9e61c', '[{"article_id":"4","article_variant":"0","article_amount":3}]', '2021-10-13 14:34:49'),
-('63091f28a4a16dee939bc2a0ff08245a750b0cbb50f0e757d89fea564b0f63e1', '[]', '2021-10-19 05:54:34'),
-('9d7113c610d3aeb766758646d98909c2087c4c619df7c1cd635e085571bc75f7', '[]', '2021-10-19 08:17:24');
+('934e0317acefe219dce1409d72301c7fcbf58614a45b98c60ef262254fb29845', '[]', '2021-10-20 14:14:40');
 
 -- --------------------------------------------------------
 
@@ -139,9 +137,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `user_salt` varchar(10) NOT NULL,
   `user_cart` longtext NOT NULL,
   `user_location_id` int(255) NOT NULL DEFAULT '1',
-  `user_passwordtime` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  `user_passwordtime` timestamp NULL DEFAULT NULL,
   `user_passwordcode` varchar(200) DEFAULT NULL,
-  `user_activationtime` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  `user_activationtime` timestamp NULL DEFAULT NULL,
   `user_activationcode` varchar(200) DEFAULT NULL,
   `user_active` enum('1','0') NOT NULL DEFAULT '0',
   `user_admin` enum('1','0') NOT NULL DEFAULT '0',
@@ -154,8 +152,8 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`user_id`, `user_email`, `user_username`, `user_credit`, `user_password`, `user_salt`, `user_cart`, `user_location_id`, `user_passwordtime`, `user_passwordcode`, `user_activationtime`, `user_activationcode`, `user_active`, `user_admin`, `user_keywords`) VALUES
-(1, 'wbadmin@gmail.com', 'wbadmin', 99.99, 'b5fdb4951be86a26b0fbff64d740393b823fc2ad187b072ab499601377c1e71b', '5OWEct3xug', '[]', 1, '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00', NULL, '1', '1', 'wbadmin@gmail.com wbadmin'),
-(2, 'alexanderbrosch1@gmail.com', 'broscha', 69.99, 'ccd05dddcdf34ec7e733cce30904a25aa00dcc31d98559b5865bfbe87ae97045', 'M0uhEkKmti', '[{"article_id":"4","article_variant":"0","article_amount":"1"}]', 6, '0000-00-00 00:00:00', NULL, '2021-10-18 09:40:09', 'bb72d2f7b8c7e186ce13c10b64865cda2cd11c2142187409f212d998828e5867', '1', '0', 'alexanderbrosch1@gmail.com broscha');
+(1, 'wbadmin@gmail.com', 'wbadmin', 99.99, 'b5fdb4951be86a26b0fbff64d740393b823fc2ad187b072ab499601377c1e71b', '5OWEct3xug', '[]', 1, NULL, NULL, NULL, NULL, '1', '1', 'wbadmin@gmail.com wbadmin'),
+(2, 'alexanderbrosch1@gmail.com', 'abrolex', 69.99, 'ccd05dddcdf34ec7e733cce30904a25aa00dcc31d98559b5865bfbe87ae97045', 'M0uhEkKmti', '[]', 6, NULL, NULL, NULL, NULL, '1', '0', 'alexanderbrosch1@gmail.com abrolex');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

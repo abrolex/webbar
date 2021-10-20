@@ -168,7 +168,7 @@ else
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
 		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
 			<div class="w3-center">
-				<h2>WebBar</h2>
+				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">
 					<a class="w3-bar-item w3-btn" href="/"><i class="fas fa-home fa-2x"></i></a>
 					<a class="w3-bar-item w3-btn" href="/user/"><i class="fas fa-user fa-2x"></i></a>
