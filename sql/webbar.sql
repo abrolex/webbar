@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 20. Okt 2021 um 22:29
+-- Erstellungszeit: 19. Nov 2021 um 11:02
 -- Server Version: 5.6.13
 -- PHP-Version: 5.4.17
 
@@ -68,7 +68,9 @@ CREATE TABLE IF NOT EXISTS `cart` (
 --
 
 INSERT INTO `cart` (`cart_id`, `cart_content`, `cart_time`) VALUES
-('dd84a7b12a8f04bc1782288d2fe271e88c95e71ebeea77bcb9beb324fbe75c40', '[]', '2021-10-20 18:18:10');
+('dd84a7b12a8f04bc1782288d2fe271e88c95e71ebeea77bcb9beb324fbe75c40', '[]', '2021-10-20 18:18:10'),
+('dd095415350d5c55c4e288c445a60407ceb973d2dfa45afef39167283e3cd476', '[]', '2021-11-17 15:49:38'),
+('26ed54083cf13556670ee1f7f849c5c10c1664785abce12ed6c2052f35e42847', '[]', '2021-11-19 07:03:04');
 
 -- --------------------------------------------------------
 
@@ -104,19 +106,18 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `order_id` int(255) NOT NULL AUTO_INCREMENT,
   `order_user_id` int(255) NOT NULL,
   `order_location_id` int(255) NOT NULL,
-  `order_content` longtext NOT NULL,
-  `order_time` timestamp NULL DEFAULT NULL,
+  `order_cart` longtext NOT NULL,
+  `order_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `order_status` enum('0','1','2') NOT NULL DEFAULT '0',
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 --
 -- Daten für Tabelle `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `order_user_id`, `order_location_id`, `order_content`, `order_time`, `order_status`) VALUES
-(8, 2, 0, '[{"article_id":"4","article_name":"Coconut Kiss","article_variant":"0.4L","article_price":"5.00","article_amount":2},{"article_id":"10","article_name":"Lynchburg Lemonade","article_variant":"0.4L","article_price":"6.00","article_amount":"1"}]', '2021-10-20 18:05:10', '0'),
-(9, 2, 6, '[{"article_id":"7","article_name":"Miami Dolphin","article_variant":"0.4L","article_price":"5.00","article_amount":"1"},{"article_id":"4","article_name":"Coconut Kiss","article_variant":"0.4L","article_price":"5.00","article_amount":"1"}]', '2021-10-20 20:16:44', '0');
+INSERT INTO `orders` (`order_id`, `order_user_id`, `order_location_id`, `order_cart`, `order_time`, `order_status`) VALUES
+(11, 2, 6, '[{"id":"5","name":"Swimming Pool","variant":"0.4L","price":"5.00","amount":"1"}]', '2021-11-19 09:11:56', '0');
 
 -- --------------------------------------------------------
 
@@ -141,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `user_admin` enum('1','0') NOT NULL DEFAULT '0',
   `user_keywords` longtext NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `user`
@@ -149,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`user_id`, `user_email`, `user_username`, `user_credit`, `user_password`, `user_salt`, `user_cart`, `user_location_id`, `user_passwordtime`, `user_passwordcode`, `user_activationtime`, `user_activationcode`, `user_active`, `user_admin`, `user_keywords`) VALUES
 (1, 'wbadmin@gmail.com', 'wbadmin', 99.99, 'b5fdb4951be86a26b0fbff64d740393b823fc2ad187b072ab499601377c1e71b', '5OWEct3xug', '[]', 1, NULL, NULL, NULL, NULL, '1', '1', 'wbadmin@gmail.com wbadmin'),
-(2, 'alexanderbrosch1@gmail.com', 'Pimmelkopf', 43.99, 'ccd05dddcdf34ec7e733cce30904a25aa00dcc31d98559b5865bfbe87ae97045', 'M0uhEkKmti', '[]', 7, NULL, NULL, NULL, NULL, '1', '0', 'alexanderbrosch1@gmail.com Pimmelkopf');
+(2, 'alexanderbrosch1@gmail.com', 'abrolex', 18.99, '9fa59c90dea564cd573ee63fce7f06d963f54936c355fe996d317233739327c3', 'S373QpDvvK', '[]', 6, NULL, NULL, NULL, NULL, '1', '0', 'alexanderbrosch1@gmail.com abrolex');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

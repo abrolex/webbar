@@ -100,21 +100,18 @@ else
 													
 													$user_cart = array();
 													
-													$user_atime = date("Y.m.d H:i:s",strtotime("now"));
-													
 													$user_acode = randomstr(10);
 													
 													$query = sprintf("
 													INSERT INTO user
-													(user_email,user_username,user_password,user_salt,user_cart,user_activationtime,user_activationcode,user_keywords)
+													(user_email,user_username,user_password,user_salt,user_cart,user_activationcode,user_keywords)
 													VALUES
-													('%s','%s','%s','%s','%s','%s','%s','%s');",
+													('%s','%s','%s','%s','%s','%s','%s');",
 													$sql->real_escape_string($user_email),
 													$sql->real_escape_string($user_username),
 													$sql->real_escape_string($user_password),
 													$sql->real_escape_string($user_salt),
 													$sql->real_escape_string(json_encode($user_cart)),
-													$sql->real_escape_string($user_atime),
 													$sql->real_escape_string(hash('sha256',$user_acode)),
 													$sql->real_escape_string($user_email.' '.$user_username));
 													
@@ -138,7 +135,7 @@ else
 															
 															$subject = 'Aktivieren Sie ihren Account';
 															
-															$txt  = 'Guten Tag '.$user_username."\n\n";
+															$txt  = 'Guten Tag '.$user_username.','."\n\n";
 															$txt .= 'Vielen Dank fuer ihre Registrierung.'."\n\n";
 															$txt .= 'Aktivieren Sie ihren Account mit folgendem Link.'."\n\n";
 															$txt .= 'http://'.$_SERVER['HTTP_HOST'].'/activation/?user_id='.$row['user_id'].'&user_code='.$user_acode."\n\n";
@@ -257,7 +254,7 @@ else
 		?>
 	</head>
 	<body class="gradient-blue">
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-container">
 				<div class="w3-center">
 					<a href="/"><h2>WebBar</h2></a>

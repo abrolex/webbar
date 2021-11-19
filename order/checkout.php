@@ -60,15 +60,15 @@ else
 							{
 								$price_g = 0.00;
 								
-								$order_content = array();
+								$order_cart = array();
 								
 								for($i = 0; $i < $cart_count; $i++)
 								{	
 									$article_id = $cart[$i]['article_id'];
 									
-									$article_variant_id = $cart[$i]['article_variant'];
+									$variant_id = $cart[$i]['variant_id'];
 									
-									$article_amount = $cart[$i]['article_amount'];
+									$amount = $cart[$i]['amount'];
 									
 									$query = sprintf("
 									SELECT article_name,article_variant,article_price
@@ -83,18 +83,24 @@ else
 										$article_name = $row['article_name'];
 										
 										$variant_arr = explode('/',$row['article_variant']);
-
-										$article_variant = $variant_arr[$article_variant_id];
 										
 										$price_arr = explode('/',$row['article_price']);
+
+										$variant = $variant_arr[$variant_id];
+									
+										$price = $price_arr[$variant_id];
 										
-										$article_price = $price_arr[$article_variant_id];
+										$article = array('id' => $article_id,'name' => $article_name,'variant' => $variant,'price' => $price,'amount' => $amount);
 										
-										$article = array('article_id' => $article_id,'article_name' => $article_name,'article_variant' => $article_variant,'article_price' => $article_price,'article_amount' => $article_amount);
+										$price_g = number_format($amount*$price+$price_g,2,'.','.');
 										
-										$price_g = number_format($article_amount*$article_price+$price_g,'2','.','.');
-										
-										array_push($order_content,$article);
+										array_push($order_cart,$article);
+									}
+									else
+									{
+										$output  = '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+										$output .= '<p>Einige Artikel wurden aus ihrem Warenkorb entfernt.</p>';
+										$output .= '</div>';
 									}
 									
 									unset($cart[$i]);
@@ -119,17 +125,14 @@ else
 									
 									if($sql->affected_rows == 1)
 									{
-										$order_time = date('Y-m-d H:i:s',strtotime('now'));
-									
 										$query = sprintf("
 										INSERT INTO orders
-										(order_user_id,order_location_id,order_content,order_time)
+										(order_user_id,order_location_id,order_cart)
 										VALUES
-										('%s','%s','%s','%s');",
+										('%s','%s','%s');",
 										$sql->real_escape_string($_SESSION['user_id']),
 										$sql->real_escape_string($location_id),
-										$sql->real_escape_string(json_encode($order_content)),
-										$sql->real_escape_string($order_time));
+										$sql->real_escape_string(json_encode($order_cart)));
 										
 										$sql->query($query);
 										
@@ -216,7 +219,7 @@ else
 	</head>
 	<body class="gradient-blue">
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">

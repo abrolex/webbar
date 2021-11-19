@@ -66,7 +66,7 @@ else
 		?>
 	</head>
 	<body class="gradient-blue">
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-container">
 				<div class="w3-center">
 					<a href="/"><h2>WebBar</h2></a>

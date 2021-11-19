@@ -78,7 +78,7 @@ else
 						$output .= '<div class="w3-section scroll-h">';
 					}
 
-					$output .= '<div class="scroll-obj" style="width:100%;">';
+					$output .= '<div class="scroll-h-container">';
 					$output .= '<div class="w3-row">';
 					$output .= '<div class="w3-col s9 m9 l9">';
 					$output .= '<button class="w3-btn w3-block grey">'.$row['article_name'].'</button>';
@@ -107,7 +107,7 @@ else
 	</head>
 	<body class="gradient-blue">
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<h2>WebBar</h2>
 				<div class="w3-bar">
@@ -147,6 +147,5 @@ else
 				?>
 			</div>
 		</div>
-		<script type="text/javascript" src="/js/autoscroll.js"></script>
 	</body>
 </html>

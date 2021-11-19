@@ -98,30 +98,30 @@ else
 															
 															$cookie_article_id = $cookie_cart[$i]['article_id'];
 															
-															$cookie_article_variant = $cookie_cart[$i]['article_variant'];
+															$cookie_variant_id = $cookie_cart[$i]['variant_id'];
 															
-															$cookie_article_amount = $cookie_cart[$i]['article_amount'];
+															$cookie_amount = $cookie_cart[$i]['amount'];
 															
 															for($j = 0; $j < $user_cart_count; $j++)
 															{
 																$user_article_id = $user_cart[$j]['article_id'];
 															
-																$user_article_variant = $user_cart[$j]['article_variant'];
+																$user_variant_id = $user_cart[$j]['variant_id'];
 															
-																$user_article_amount = $user_cart[$j]['article_amount'];
+																$user_amount = $user_cart[$j]['amount'];
 																
-																if($cookie_article_id == $user_article_id && $cookie_article_variant == $user_article_variant)
+																if($cookie_article_id == $user_article_id && $cookie_variant_id == $user_variant_id)
 																{
 																	$in_user_cart = 1;
 																	
-																	$user_article_amount_new = $user_article_amount+$cookie_article_amount;
+																	$user_amount_new = $user_amount+$cookie_amount;
 																	
-																	if($user_article_amount_new > 99)
+																	if($user_amount_new > $app_max_amount)
 																	{
-																		$user_article_amount_new = 99;
+																		$user_amount_new = $app_max_amount;
 																	}
 																	
-																	$user_cart[$j]['article_amount'] = $user_article_amount_new;
+																	$user_cart[$j]['amount'] = $user_amount_new;
 																}
 															}
 															
@@ -245,7 +245,7 @@ else
 		?>
 	</head>
 	<body class="gradient-blue">
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-container">
 				<div class="w3-center">
 					<a href="/"><h2>WebBar</h2></a>

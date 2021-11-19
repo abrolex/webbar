@@ -66,7 +66,7 @@ else
 									
 									if($sql->affected_rows == 1)
 									{
-										$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+										$output .= '<div class="w3-panel w3-border w3-border-green w3-text-green">';
 										$output .= '<p>Ihr Account wurde erfolgreich aktiviert.</p>';
 										$output .= '<p>Sie k&ouml;nnen sich nun einloggen.</p>';
 										$output .= '</div>';
@@ -93,7 +93,6 @@ else
 								$output .= '<p>Ihr Account wurde bereits aktiviert.</p>';
 								$output .= '</div>';
 							}
-								
 						}
 						else
 						{
@@ -135,7 +134,7 @@ else
 		?>
 	</head>
 	<body class="gradient-blue">
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-container">
 				<div class="w3-center">
 					<a href="/"><h2>WebBar</h2></a>
@@ -155,36 +154,3 @@ else
 		</div>
 	</body>
 </html>
-				
-							
-								
-								
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-				

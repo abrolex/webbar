@@ -28,14 +28,12 @@ else
 
 	$output = '';
 
-	$showform = 1;
-
 	if(!empty($_GET))
 	{
 		if(empty($_GET['search']) || $_GET['s'] == "" || empty($_GET['ps']))
 		{
 			$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-			$output .= '<p>Es wurden keine Artikel gefunden.</p>';
+			$output .= '<p>Es konnte keine Suche durchgef&uuml;hrt werden.</p>';
 			$output .= '</div>';
 		}
 		else
@@ -106,23 +104,18 @@ else
 								$output .= '</select></p>';
 								$output .= '<p><input type="hidden" name="ps" value="'.$_GET['ps'].'"/></p>';
 								$output .= '</form>';
-							}
 								
-							else
-							{
-								$output .= '<form></form>';
+								$output .= '<form action="/search/" method="get">';
+								$output .= '<p><input type="hidden" name="search" value="'.$_GET['search'].'"/></p>';
+								$output .= '<p><input type="hidden" name="s" value="0"/></p>';
+								$output .= '<p><select onchange="document.forms[2].submit();" class="w3-select w3-border w3-white" name="ps">';
+								$output .= '<option value="">'.$_GET['ps'].' pro Seite</option>';
+								$output .= '<option value="5">5 pro Seite</option>';
+								$output .= '<option value="10">10 pro Seite</option>';
+								$output .= '<option value="15">15 pro Seite</option>';
+								$output .= '</select></p>';
+								$output .= '</form>';
 							}
-								
-							$output .= '<form action="/search/" method="get">';
-							$output .= '<p><input type="hidden" name="search" value="'.$_GET['search'].'"/></p>';
-							$output .= '<p><input type="hidden" name="s" value="0"/></p>';
-							$output .= '<p><select onchange="document.forms[2].submit();" class="w3-select w3-border w3-white" name="ps">';
-							$output .= '<option value="">'.$_GET['ps'].' pro Seite</option>';
-							$output .= '<option value="5">5 pro Seite</option>';
-							$output .= '<option value="10">10 pro Seite</option>';
-							$output .= '<option value="15">15 pro Seite</option>';
-							$output .= '</select></p>';
-							$output .= '</form>';
 						}
 						else
 						{
@@ -134,14 +127,14 @@ else
 					else
 					{
 						$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-						$output .= '<p>Es ist ein Fehler aufgetreten.</p>';
+						$output .= '<p>Die Anzahl der anzuzeigenden Elemente besteht nur aus Zahlen.</p>';
 						$output .= '</div>';
 					}
 				}
 				else
 				{
 					$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-					$output .= '<p>Es ist ein Fehler aufgetreten.</p>';
+					$output .= '<p>Die Seitenzahl besteht nur aus Zahlen.</p>';
 					$output .= '</div>';
 				}
 			}
@@ -156,7 +149,7 @@ else
 	else
 	{
 		$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-		$output .= '<p>Geben Sie einen Suchbegriff ein.</p>';
+		$output .= '<p>Es wurden keine Daten gesendet.</p>';
 		$output .= '</div>';
 	}
 }
@@ -171,7 +164,7 @@ else
 	</head>
 	<body class="gradient-blue">
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">

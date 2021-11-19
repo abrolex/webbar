@@ -75,9 +75,9 @@ else
 			else
 			{
 				$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-				$output .= '<p>Sie haben noch keinen Tisch gew&auml;hlt.</p>';
+				$output .= '<p>Sie haben noch keine Lokation gew&auml;hlt.</p>';
 				$output .= '</div>';
-				$output .= '<p><a class="w3-btn w3-padding-large blue" href="/user/">&auml;ndern <i class="fas fa-edit"></i></a></p>';
+				$output .= '<p><a class="w3-btn w3-block w3-padding-large blue" href="/user/">&auml;ndern <i class="fas fa-edit"></i></a></p>';
 			}
 			
 			if(!empty($cart))
@@ -89,13 +89,19 @@ else
 				$output .= '<h4>'.$cart_count.' Artikel im Warenkorb <a href="/cart/"><i class="fas fa-edit"></i></a></h4>';
 				$output .= '<div class="w3-section scroll-h">';
 				
-				for($i = 0;$i < $cart_count;$i++)
+				for($i = 0; $i < $cart_count; $i++)
 				{
+					$article_id = $cart[$i]['article_id'];
+					
+					$variant_id = $cart[$i]['variant_id'];
+					
+					$amount = $cart[$i]['amount'];
+					
 					$query = sprintf("
 					SELECT article_name,article_variant,article_price
 					FROM article
 					WHERE article_id = '%s';",
-					$sql->real_escape_string($cart[$i]['article_id']));
+					$sql->real_escape_string($article_id));
 					
 					$result = $sql->query($query);
 					
@@ -105,12 +111,12 @@ else
 				
 						$price_arr = explode('/',$row['article_price']);
 				
-						$price = number_format($price_arr[$cart[$i]['article_variant']]*$cart[$i]['article_amount'],2,'.','.');
+						$price = number_format($price_arr[$variant_id]*$amount,2,'.','.');
 				
 						$output .= '<div class="w3-border">';
 						$output .= '<p class="w3-large">'.$row['article_name'].'</p>';
-						$output .= '<p>'.$cart[$i]['article_amount'].'x '.$variant_arr[$cart[$i]['article_variant']].' '.$price_arr[$cart[$i]['article_variant']].' &euro;</p>';
-						$output .= '<p><button class="w3-btn w3-padding-large w3-border grey">Artikelpreis: '.$price.' &euro;</button></p>';
+						$output .= '<p>'.$amount.'x '.$variant_arr[$variant_id].' '.$price_arr[$variant_id].' &euro;</p>';
+						$output .= '<p><button class="w3-btn w3-padding-large w3-border grey">Preis: '.$price.' &euro;</button></p>';
 						$output .= '</div>';
 						
 						$price_g = number_format($price+$price_g,2,'.','.');
@@ -131,6 +137,7 @@ else
 					$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
 					$output .= '<p>Ihr Guthaben reicht nicht aus.</p>';
 					$output .= '</div>';
+					$output .= '<p><a class="w3-btn w3-block w3-padding-large blue" href="/user/change.php?attr=credit&attr_value=info&csrf_token='.$_SESSION['user_csrf_token'].'">Guthaben aufladen <i class="fas fa-info"></i></a></p>';
 				}
 			}
 			else
@@ -139,6 +146,12 @@ else
 				$output .= '<p>Ihr Warenkorb ist leer :(</p>';
 				$output .= '</div>';
 			}
+		}
+		else
+		{
+			$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
+			$output .= '<p>Es wurde kein Useraccount gefunden.</p>';
+			$output .= '</div>';
 		}
 	}
 }
@@ -153,7 +166,7 @@ else
 	</head>
 	<body class="gradient-blue">
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">

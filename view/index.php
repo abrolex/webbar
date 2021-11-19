@@ -80,7 +80,7 @@ else
 								$last_view = $last_view_new;
 							}
 
-							if(in_array($_GET['article_id'],$last_view) == 0)
+							if(!in_array($_GET['article_id'],$last_view))
 							{
 								if(count($last_view) == 6)
 								{
@@ -130,8 +130,8 @@ else
 					$output .= '<p><input type="hidden" name="article_id" value="'.$row['article_id'].'"/></p>';
 					$output .= '<div class="w3-row-padding w3-section" style="padding:0;">';
 					$output .= '<div class="w3-col s6 m6 l6" style="padding-left:0;">';
-					$output .= '<label for"article_variant">Variante</label>';
-					$output .= '<select class="w3-select w3-border w3-white" name="article_variant">';
+					$output .= '<label for"variant">Variante</label>';
+					$output .= '<select class="w3-select w3-border w3-white" name="variant_id">';
 						
 					for($i = 0; $i < count($variant_arr); $i++)
 					{
@@ -140,10 +140,10 @@ else
 						
 					$output .= '</select></div>';
 					$output .= '<div class="w3-col s6 m6 l6" style="padding-right:0;">';
-					$output .= '<label for"article_amount">Anzahl</label>';
-					$output .= '<select class="w3-select w3-border w3-white" name="article_amount">';
+					$output .= '<label for"amount">Anzahl</label>';
+					$output .= '<select class="w3-select w3-border w3-white" name="amount">';
 						
-					for($i = 1; $i <= 99; $i++)
+					for($i = 1; $i <= $app_max_amount; $i++)
 					{
 						$output .= '<option value="'.$i.'">'.$i.'x</option>';
 					}
@@ -156,7 +156,7 @@ else
 			else
 			{
 				$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-				$output .= '<p>Die ArtikelID besteht nur aus Zahlen.</p>';
+				$output .= '<p>Die ArtikelId besteht nur aus Zahlen.</p>';
 				$output .= '</div>';
 			}
 		}
@@ -164,7 +164,7 @@ else
 	else
 	{
 		$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-		$output .= '<p>Es wurde keine ArtikelID gesendet.</p>';
+		$output .= '<p>Es wurde keine ArtikelId gesendet.</p>';
 		$output .= '</div>';
 	}
 }
@@ -179,7 +179,7 @@ else
 	</head>
 	<body class="gradient-blue">
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">

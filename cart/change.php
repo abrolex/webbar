@@ -44,7 +44,9 @@ else
 			{
 				if(preg_match('/[^0-9]/',$_GET['article_id']) == 0)
 				{
-					if(!empty($cart[$_GET['article_id']]))
+					$article_id = $_GET['article_id'];
+					
+					if(!empty($cart[$article_id]))
 					{
 						if(preg_match('/[^a-z]/',$_GET['attr']) == 0)
 						{
@@ -60,9 +62,9 @@ else
 									
 										if(preg_match('/[^a-z0-9]/',$_GET['attr_value']) == 0)
 										{
-											$article_amount = $cart[$_GET['article_id']]['article_amount'];
+											$amount = $cart[$article_id]['amount'];
 											
-											if($article_amount == $_GET['attr_value'])
+											if($amount == $_GET['attr_value'])
 											{
 												$break = 1;
 											}
@@ -70,37 +72,37 @@ else
 											{
 												if($_GET['attr_value'] == 'reduce')
 												{
-													$article_amount--;
+													$amount--;
 												}
 												else if($_GET['attr_value'] == 'rise')
 												{
-													$article_amount++;
+													$amount++;
 												}
 												else
 												{
-													$article_amount = $_GET['attr_value'];
+													$amount = $_GET['attr_value'];
 												}
 												
-												if($article_amount <= 0)
+												if($amount <= 0)
 												{
 													$new_cart = array();
 													
-													unset($cart[$_GET['article_id']]);
+													unset($cart[$article_id]);
 													
-													foreach($cart as $article)
+													foreach($cart as $val)
 													{
-														array_push($new_cart,$article);
+														array_push($new_cart,$val);
 													}
 													
 													$cart = $new_cart;
 												}
-												else if($article_amount > 99)
+												else if($amount > $app_max_amount)
 												{
 													$break = 1;
 												}
 												else
 												{
-													$cart[$_GET['article_id']]['article_amount'] = $article_amount;
+													$cart[$article_id]['amount'] = $amount;
 												}
 											}
 										}
@@ -115,9 +117,9 @@ else
 									
 										if(preg_match('/[^0-9]/',$_GET['attr_value']) == 0)
 										{
-											$article_variant = $cart[$_GET['article_id']]['article_variant'];
+											$variant_id = $cart[$article_id]['variant_id'];
 											
-											if($article_variant == $_GET['attr_value'])
+											if($variant_id == $_GET['attr_value'])
 											{
 												$break = 1;
 											}
@@ -127,7 +129,7 @@ else
 												SELECT article_variant,article_price
 												FROM article
 												WHERE article_id = '%s';",
-												$sql->real_escape_string($cart[$_GET['article_id']]['article_id']));
+												$sql->real_escape_string($cart[$article_id]['article_id']));
 												
 												$result = $sql->query($query);
 												
@@ -143,33 +145,33 @@ else
 														
 														for($i = 0; $i < $cart_count; $i++)
 														{
-															$article_in_cart_id = $cart[$i]['article_id'];
+															$article_id_cart = $cart[$i]['article_id'];
 													
-															$article_in_cart_variant = $cart[$i]['article_variant'];
+															$variant_id_cart = $cart[$i]['variant_id'];
 													
-															$article_in_cart_amount = $cart[$i]['article_amount'];
+															$amount_cart = $cart[$i]['amount'];
 													
-															if($article_in_cart_id == $cart[$_GET['article_id']]['article_id'] && $article_in_cart_variant == $_GET['attr_value'])
+															if($article_id_cart == $cart[$article_id]['article_id'] && $variant_id_cart == $_GET['attr_value'])
 															{
 																$in_cart = 1;
 																
-																$new_article_in_cart_amount = $article_in_cart_amount+$cart[$_GET['article_id']]['article_amount'];
+																$new_amount_cart = $amount_cart+$cart[$article_id]['amount'];
 											
-																if($new_article_in_cart_amount > 99)
+																if($new_amount_cart > $app_max_amount)
 																{	
 																	$break = 1;
 																}
 																else
 																{
-																	$cart[$i]['article_amount'] = $new_article_in_cart_amount;
+																	$cart[$i]['amount'] = $new_amount_cart;
+																	
+																	unset($cart[$article_id]);
 																	
 																	$new_cart = array();
 												
-																	unset($cart[$_GET['article_id']]);
-																	
-																	foreach($cart as $article)
+																	foreach($cart as $val)
 																	{
-																		array_push($new_cart,$article);
+																		array_push($new_cart,$val);
 																	}
 																	
 																	$cart = $new_cart;
@@ -179,7 +181,7 @@ else
 														
 														if(empty($in_cart))
 														{
-															$cart[$_GET['article_id']]['article_variant'] = $_GET['attr_value'];
+															$cart[$article_id]['variant_id'] = $_GET['attr_value'];
 														}
 													}
 													else
@@ -197,6 +199,8 @@ else
 										{
 											$break = 1;
 										}
+										
+										break;
 								}
 								
 								if(empty($break))
@@ -248,7 +252,7 @@ else
 							else
 							{
 								$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-								$output .= '<p>Es konnte keine Aktion durchgef&uuml;hrt werden.</p>';
+								$output .= '<p>Sie k&ouml;nnen nur die Anzahl und Variante &auml;ndern.</p>';
 								$output .= '</div>';
 							}
 						}
@@ -262,7 +266,7 @@ else
 					else
 					{
 						$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-						$output .= '<p>Artikelindex existiert nicht.</p>';
+						$output .= '<p>ArtikelId existiert nicht in ihrem Warenkorb.</p>';
 						$output .= '</div>';
 					}
 				}
@@ -292,14 +296,14 @@ else
 <!DOCTYPE HTML>
 <html lang="de">
 	<head>
-		<title>WebBar | Warenkorb Artikel &auml;ndern</title>
+		<title>WebBar | Warenkorb | Artikel &auml;ndern</title>
 		<?php
 		require($_SERVER['DOCUMENT_ROOT'].'/include/head.inc.php');
 		?>
 	</head>
 	<body class="gradient-blue">
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">

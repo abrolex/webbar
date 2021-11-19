@@ -34,13 +34,19 @@ else
 		
 		$output .= '<h4>'.$cart_count.' Artikel im Warenkorb</h4>';
 		
-		for($i = 0;$i < $cart_count;$i++)
+		for($i = 0; $i < $cart_count; $i++)
 		{
+			$article_id = $cart[$i]['article_id'];
+			
+			$variant_id = $cart[$i]['variant_id'];
+			
+			$amount = $cart[$i]['amount'];
+			
 			$query = sprintf("
 			SELECT article_name,article_variant,article_price
 			FROM article
 			WHERE article_id = '%s';",
-			$sql->real_escape_string($cart[$i]['article_id']));
+			$sql->real_escape_string($article_id));
 			
 			$result = $sql->query($query);
 			
@@ -50,7 +56,7 @@ else
 				
 				$price_arr = explode('/',$row['article_price']);
 				
-				$price = number_format($price_arr[$cart[$i]['article_variant']]*$cart[$i]['article_amount'],2,'.','.');
+				$price = number_format($price_arr[$variant_id]*$amount,2,'.','.');
 				
 				$output .= '<p class="w3-large"><a href="del.php?article_id='.$i.'"><i class="fas fa-times"></i></a> '.$row['article_name'].'</p>';
 				$output .= '<div class="w3-section">';
@@ -64,9 +70,9 @@ else
 				$output .= '<input type="hidden" name="article_id" value="'.$i.'"/>';
 				$output .= '<input type="hidden" name="attr" value="amount"/>';
 				$output .= '<select onchange="'."document.getElementsByClassName('changeform1')".'['.$i.'].submit();" class="w3-select w3-border w3-white" style="height:40.5px" name="attr_value">';
-				$output .= '<option value="">'.$cart[$i]['article_amount'].'x</option>';
+				$output .= '<option value="">'.$amount.'x</option>';
 				
-				for($j = 1; $j <= 99; $j++)
+				for($j = 1; $j <= $app_max_amount; $j++)
 				{
 					$output .= '<option value="'.$j.'">'.$j.'x</option>';
 				}
@@ -82,7 +88,7 @@ else
 				$output .= '<input type="hidden" name="article_id" value="'.$i.'"/>';
 				$output .= '<input type="hidden" name="attr" value="variant"/>';
 				$output .= '<select onchange="'."document.getElementsByClassName('changeform2')".'['.$i.'].submit();" class="w3-select w3-border w3-white" style="height:40.5px;" name="attr_value">';
-				$output .= '<option value="">'.$variant_arr[$cart[$i]['article_variant']].' '.$price_arr[$cart[$i]['article_variant']].' &euro;</option>';
+				$output .= '<option value="">'.$variant_arr[$variant_id].' '.$price_arr[$variant_id].' &euro;</option>';
 				
 				for($j = 0; $j < count($variant_arr); $j++)
 				{
@@ -94,7 +100,7 @@ else
 				$output .= '</div>';
 				$output .= '</div>';
 				$output .= '</div>';
-				$output .= '<p><button class="w3-btn w3-block w3-padding-large w3-border grey">Artikelpreis: '.$price.' &euro;</button></p>';
+				$output .= '<p><button class="w3-btn w3-block w3-padding-large w3-border grey">Preis: '.$price.' &euro;</button></p>';
 				
 				$price_g = number_format($price+$price_g,2,'.','.');
 			}
@@ -121,7 +127,7 @@ else
 	</head>
 	<body class="gradient-blue">
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">

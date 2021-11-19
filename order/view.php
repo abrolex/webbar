@@ -39,7 +39,7 @@ else
 				if(preg_match('/[^0-9]/',$_GET['order_id']) == 0)
 				{
 					$query = sprintf("
-					SELECT order_id,order_content,order_time,order_status,location_name
+					SELECT order_id,order_cart,order_time,order_status,location_name
 					FROM orders
 					INNER JOIN location ON order_location_id = location_id
 					WHERE order_id = '%s'
@@ -53,7 +53,7 @@ else
 					{
 						$price_g = 0.00;
 						
-						$order_content = json_decode($row['order_content'],true);
+						$order_cart = json_decode($row['order_cart'],true);
 						
 						$order_time = date('d.m.Y H:i:s',strtotime($row['order_time']));
 						
@@ -87,17 +87,25 @@ else
 						$output .= '</div>';
 						$output .= '<div class="w3-section scroll-h">';
 						
-						for($i = 0;$i < count($order_content); $i++)
+						for($i = 0; $i < count($order_cart); $i++)
 						{
-							$price = number_format($order_content[$i]['article_price']*$order_content[$i]['article_amount'],'2','.','.');
+							$article_name = $order_cart[$i]['name'];
+							
+							$variant = $order_cart[$i]['variant'];
+							
+							$price_e = $order_cart[$i]['price'];
+							
+							$amount = $order_cart[$i]['amount'];
+							
+							$price = number_format($price_e*$amount,2,'.','.');
 							
 							$output .= '<div class="w3-border">';
-							$output .= '<p class="w3-large">'.$order_content[$i]['article_name'].'</p>';
-							$output .= '<p>'.$order_content[$i]['article_amount'].'x '.$order_content[$i]['article_variant'].' '.$order_content[$i]['article_price'].' &euro;</p>';
-							$output .= '<p><button class="w3-btn w3-padding-large w3-border grey">Artikelpreis: '.$price.' &euro;</button></p>';
+							$output .= '<p class="w3-large">'.$article_name.'</p>';
+							$output .= '<p>'.$amount.'x '.$variant.' '.$price_e.' &euro;</p>';
+							$output .= '<p><button class="w3-btn w3-padding-large w3-border grey">Preis: '.$price.' &euro;</button></p>';
 							$output .= '</div>';
 							
-							$price_g = number_format($price_g+$price,'2','.','.');
+							$price_g = number_format($price_g+$price,2,'.','.');
 						}
 						
 						$output .= '</div>';
@@ -138,7 +146,7 @@ else
 	</head>
 	<body class="gradient-blue">
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">

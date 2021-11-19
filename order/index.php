@@ -119,28 +119,28 @@ else
 							else
 							{
 								$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-								$output .= '<p>Es wurden keine Bestellungen gefunden.</p>';
+								$output .= '<p>Sie haben noch nichts bestellt.</p>';
 								$output .= '</div>';
 							}
 						}
 						else
 						{
 							$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-							$output .= '<p>Ung&uuml;ltige Werte erkannt.</p>';
+							$output .= '<p>Es k&ouml;nnen nur 5,10 oder 15 Elemente angezeigt werden.</p>';
 							$output .= '</div>';
 						}
 					}
 					else
 					{
 						$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-						$output .= '<p>Ung&uuml;ltige Werte erkannt.</p>';
+						$output .= '<p>Die Anzahl der anzuzeigenden Elemente besteht nur aus Zahlen.</p>';
 						$output .= '</div>';
 					}
 				}
 				else
 				{
 					$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-					$output .= '<p>Ung&uuml;ltige Werte erkannt.</p>';
+					$output .= '<p>Die Seitenzahl besteht nur aus Zahlen.</p>';
 					$output .= '</div>';
 				}
 			}
@@ -166,7 +166,7 @@ else
 	</head>
 	<body class="gradient-blue">
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">

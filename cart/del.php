@@ -44,15 +44,17 @@ else
 			{
 				if(preg_match('/[^0-9]/',$_GET['article_id']) == 0)
 				{
-					if(!empty($cart[$_GET['article_id']]))
+					$article_id = $_GET['article_id'];
+					
+					if(!empty($cart[$article_id]))
 					{
+						unset($cart[$article_id]);
+						
 						$new_cart = array();
-													
-						unset($cart[$_GET['article_id']]);
-													
-						foreach($cart as $article)
+
+						foreach($cart as $val)
 						{
-							array_push($new_cart,$article);
+							array_push($new_cart,$val);
 						}
 													
 						$cart = $new_cart;
@@ -97,14 +99,14 @@ else
 					else
 					{
 						$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-						$output .= '<p>ArtikelIndex existiert nicht.</p>';
+						$output .= '<p>ArtikelId existiert nicht in ihrem Warenkorb.</p>';
 						$output .= '</div>';
 					}
 				}
 				else
 				{
 					$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-					$output .= '<p>Die ArtikelID besteht nur aus Zahlen.</p>';
+					$output .= '<p>Die ArtikelId besteht nur aus Zahlen.</p>';
 					$output .= '</div>';
 				}
 			}
@@ -127,14 +129,14 @@ else
 <!DOCTYPE HTML>
 <html lang="de">
 	<head>
-		<title>WebBar | Warenkorb Artikel l&ouml;schen</title>
+		<title>WebBar | Warenkorb | Artikel l&ouml;schen</title>
 		<?php
 		require($_SERVER['DOCUMENT_ROOT'].'/include/head.inc.php');
 		?>
 	</head>
 	<body class="gradient-blue">
 		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<a href="/"><h2>WebBar</h2></a>
 				<div class="w3-bar">
