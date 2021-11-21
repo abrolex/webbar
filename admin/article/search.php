@@ -5,7 +5,7 @@ session_regenerate_id();
 
 if(empty($_SESSION['admin_login']))
 {
-	header('location:http://'.$_SERVER['HTTP_HOST'].'/admin/login.php');
+	header('location:http://'.$_SERVER['HTTP_HOST'].'/admin/login/');
 	exit;
 }
 else
@@ -102,22 +102,18 @@ else
 									$output .= '</select></p>';
 									$output .= '<p><input type="hidden" name="ps" value="'.$_GET['ps'].'"/></p>';
 									$output .= '</form>';
-								}
-								else
-								{
-									$output .= '<form></form>';
-								}
 								
-								$output .= '<form action="search.php" method="get">';
-								$output .= '<p><input type="hidden" name="search" value="'.$_GET['search'].'"/></p>';
-								$output .= '<p><input type="hidden" name="s" value="0"/></p>';
-								$output .= '<p><select onchange="document.forms[2].submit();" class="w3-select w3-border w3-white" name="ps">';
-								$output .= '<option value="">'.$_GET['ps'].' pro Seite</option>';
-								$output .= '<option value="5">5 pro Seite</option>';
-								$output .= '<option value="10">10 pro Seite</option>';
-								$output .= '<option value="15">15 pro Seite</option>';
-								$output .= '</select></p>';
-								$output .= '</form>';
+									$output .= '<form action="search.php" method="get">';
+									$output .= '<p><input type="hidden" name="search" value="'.$_GET['search'].'"/></p>';
+									$output .= '<p><input type="hidden" name="s" value="0"/></p>';
+									$output .= '<p><select onchange="document.forms[2].submit();" class="w3-select w3-border w3-white" name="ps">';
+									$output .= '<option value="">'.$_GET['ps'].' pro Seite</option>';
+									$output .= '<option value="5">5 pro Seite</option>';
+									$output .= '<option value="10">10 pro Seite</option>';
+									$output .= '<option value="15">15 pro Seite</option>';
+									$output .= '</select></p>';
+									$output .= '</form>';
+								}
 							}
 							else
 							{
@@ -166,13 +162,23 @@ else
 		?>
 	</head>
 	<body class="gradient-blue">
-		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div id="sidebar-overlay" class="overlay">
+			<div class="w3-sidebar w3-animate-left dark">
+				<button onclick="w3.addStyle('#sidebar-overlay','display','none');" class="w3-btn"><i class="fas fa-times fa-2x"></i></button>
+				<div class="w3-container">
+					<p><a class="w3-btn w3-block w3-padding-large active" href="#">Admin</a></p>
+					<p><a class="w3-btn w3-block w3-padding-large" href="/">User</a></p>
+				</div>
+			</div>
+		</div>
+		<button onclick="w3.addStyle('#sidebar-overlay','display','block');" class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<div class="w3-bar">
 					<a class="w3-bar-item w3-btn" href="/admin/"><i class="fas fa-home fa-2x"></i></a>
-					<a class="w3-bar-item w3-btn" href="../user/"><i class="fas fa-user fa-2x"></i></a>
-					<a class="w3-bar-item w3-btn active" href="index.php"><i class="fas fa-cube fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn" href="/admin/user/?s=0&ps=5"><i class="fas fa-user fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn active" href="/admin/article/?s=0&ps=5"><i class="fas fa-cube fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn" href="/admin/order/?s=0&ps=5&state=0"><i class="fas fa-list fa-2x"></i></a>
 				</div>
 			</div>
 			<div class="w3-container">

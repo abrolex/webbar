@@ -78,7 +78,7 @@ else
 						$output .= '<div class="w3-section scroll-h">';
 					}
 
-					$output .= '<div class="scroll-h-container">';
+					$output .= '<div class="scroll-h-container" style="width:100%;">';
 					$output .= '<div class="w3-row">';
 					$output .= '<div class="w3-col s9 m9 l9">';
 					$output .= '<button class="w3-btn w3-block grey">'.$row['article_name'].'</button>';
@@ -106,7 +106,16 @@ else
 		?>
 	</head>
 	<body class="gradient-blue">
-		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
+		<div id="sidebar-overlay" class="overlay">
+			<div class="w3-sidebar w3-animate-left dark">
+				<button onclick="w3.addStyle('#sidebar-overlay','display','none');" class="w3-btn"><i class="fas fa-times fa-2x"></i></button>
+				<div class="w3-container">
+					<p><a class="w3-btn w3-block w3-padding-large" href="/admin/">Admin</a></p>
+					<p><a class="w3-btn w3-block w3-padding-large active" href="#">User</a></p>
+				</div>
+			</div>
+		</div>
+		<button onclick="w3.addStyle('#sidebar-overlay','display','block');" class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
 		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<h2>WebBar</h2>

@@ -302,7 +302,16 @@ else
 		?>
 	</head>
 	<body class="gradient-blue">
-		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
+		<div id="sidebar-overlay" class="overlay">
+			<div class="w3-sidebar w3-animate-left dark">
+				<button onclick="w3.addStyle('#sidebar-overlay','display','none');" class="w3-btn"><i class="fas fa-times fa-2x"></i></button>
+				<div class="w3-container">
+					<p><a class="w3-btn w3-block w3-padding-large" href="/admin/">Admin</a></p>
+					<p><a class="w3-btn w3-block w3-padding-large active" href="#">User</a></p>
+				</div>
+			</div>
+		</div>
+		<button onclick="w3.addStyle('#sidebar-overlay','display','block');" class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
 		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<a href="/"><h2>WebBar</h2></a>
@@ -344,5 +353,6 @@ else
 				</div>
 			</div>
 		</div>
+		<script src="https://www.w3schools.com/lib/w3.js"></script>
 	</body>
 </html>

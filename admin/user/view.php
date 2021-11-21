@@ -5,7 +5,7 @@ session_regenerate_id();
 
 if(empty($_SESSION['admin_login']))
 {
-	header('location:http://'.$_SERVER['HTTP_HOST'].'/admin/login.php');
+	header('location:http://'.$_SERVER['HTTP_HOST'].'/admin/login/');
 	exit;
 }
 else
@@ -37,8 +37,9 @@ else
 				else
 				{
 					$query = sprintf("
-					SELECT user_id,user_email,user_username,user_credit,user_active,user_admin
+					SELECT user_id,user_email,user_username,user_location_id,location_name,user_credit,user_active,user_admin
 					FROM user
+					INNER JOIN location ON location_id = user_location_id
 					WHERE user_id = '%s';",
 					$sql->real_escape_string($_GET['user_id']));
 					
@@ -50,23 +51,23 @@ else
 						
 						if($row['user_active'])
 						{
-							$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=user_active&attr_value=0&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-times"></i></a> ';
+							$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=active&attr_value=0&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-times"></i></a> ';
 						}
 						else
 						{
-							$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=user_active&attr_value=1&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-check"></i></a> ';
+							$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=active&attr_value=1&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-check"></i></a> ';
 						}
 						
 						if($row['user_admin'])
 						{
-							$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=user_admin&attr_value=0&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-arrow-down"></i></a> ';
+							$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=admin&attr_value=0&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-arrow-down"></i></a> ';
 						}
 						else
 						{
-							$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=user_admin&attr_value=1&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-arrow-up"></i></a> ';
+							$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=admin&attr_value=1&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-arrow-up"></i></a> ';
 						}
 						
-						$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=user_password&attr_value=reset&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-key"></i></a>';
+						$output .= '<a class="w3-btn w3-padding-large blue" href="change.php?user_id='.$row['user_id'].'&attr=password&attr_value=reset&csrf_token='.$_SESSION['user_csrf_token'].'"><i class="fas fa-key"></i></a>';
 						$output .= '</p>';
 						
 						$output .= '<form action="change.php" method="get">';
@@ -75,7 +76,7 @@ else
 						$output .= '<div class="w3-row">';
 						$output .= '<div class="w3-col s9 m9 l9">';
 						$output .= '<input type="hidden" name="user_id" value="'.$row['user_id'].'"/>';
-						$output .= '<input type="hidden" name="attr" value="user_email"/>';
+						$output .= '<input type="hidden" name="attr" value="email"/>';
 						$output .= '<input class="w3-input w3-border" readonly="true" type="email" name="attr_value" placeholder="E-Mail-Adresse" value="'.$row['user_email'].'"/>';
 						$output .= '</div>';
 						$output .= '<div class="w3-col s3 m3 l3">';
@@ -94,7 +95,7 @@ else
 						$output .= '<div class="w3-row">';
 						$output .= '<div class="w3-col s9 m9 l9">';
 						$output .= '<input type="hidden" name="user_id" value="'.$row['user_id'].'"/>';
-						$output .= '<input type="hidden" name="attr" value="user_username"/>';
+						$output .= '<input type="hidden" name="attr" value="username"/>';
 						$output .= '<input class="w3-input w3-border" readonly="true" type="text" name="attr_value" placeholder="Username" value="'.$row['user_username'].'"/>';
 						$output .= '</div>';
 						$output .= '<div class="w3-col s3 m3 l3">';
@@ -113,7 +114,7 @@ else
 						$output .= '<div class="w3-row">';
 						$output .= '<div class="w3-col s9 m9 l9">';
 						$output .= '<input type="hidden" name="user_id" value="'.$row['user_id'].'"/>';
-						$output .= '<input type="hidden" name="attr" value="user_credit"/>';
+						$output .= '<input type="hidden" name="attr" value="credit"/>';
 						$output .= '<input class="w3-input w3-border" readonly="true" type="text" name="attr_value" placeholder="Guthaben in &euro;" value="'.$row['user_credit'].'"/>';
 						$output .= '</div>';
 						$output .= '<div class="w3-col s3 m3 l3">';
@@ -124,6 +125,39 @@ else
 						$output .= '</div>';
 						$output .= '<p><input type="hidden" name="csrf_token" value="'.$_SESSION['user_csrf_token'].'"/></p>';
 						$output .= '<p><button onclick="document.forms[3].submit();" class="w3-btn w3-padding-large blue" style="display:none;" name="save_btn" type="button">speichern <i class="fas fa-save"></i></button></p>';
+						$output .= '</form>';
+
+						$output .= '<form action="change.php" method="get">';
+						$output .= '<div class="w3-section">';
+						$output .= '<label>Lokation</label>';
+						$output .= '<div class="w3-row">';
+						$output .= '<div class="w3-col s9 m9 l9">';
+						$output .= '<input type="hidden" name="user_id" value="'.$row['user_id'].'"/>';
+						$output .= '<input type="hidden" name="attr" value="location"/>';
+						$output .= '<select class="w3-select w3-border w3-white" name="attr_value" disabled="true">';
+						$output .= '<option value="'.$row['user_location_id'].'">'.$row['location_name'].'</option>';
+
+						$query = "
+						SELECT location_id,location_name
+						FROM location";
+
+						$result = $sql->query($query);
+
+						while($row = $result->fetch_array(MYSQLI_ASSOC))
+						{
+							$output .= '<option value="'.$row['location_id'].'">'.$row['location_name'].'</option>';
+						}
+
+						$output .= '</select>';
+						$output .= '</div>';
+						$output .= '<div class="w3-col s3 m3 l3">';
+						$output .= '<button onclick="startEdit(4);" class="w3-btn w3-block w3-border border-blue blue" name="edit_btn" type="button"><i class="fas fa-edit"></i></button>';
+						$output .= '<button onclick="cancelEdit(4);" class="w3-btn w3-block w3-border w3-border-red w3-red" style="display:none;" name="cancel_btn" type="button"><i class="fas fa-times"></i></button>';
+						$output .= '</div>';
+						$output .= '</div>';
+						$output .= '</div>';
+						$output .= '<p><input type="hidden" name="csrf_token" value="'.$_SESSION['user_csrf_token'].'"/></p>';
+						$output .= '<p><button onclick="document.forms[4].submit();" class="w3-btn w3-padding-large blue" style="display:none;" name="save_btn" type="button">speichern <i class="fas fa-save"></i></button></p>';
 						$output .= '</form>';	
 					}
 				}
@@ -131,7 +165,7 @@ else
 			else
 			{
 				$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-				$output .= '<p>Die ArtikelID besteht nur aus Zahlen.</p>';
+				$output .= '<p>Die UserId besteht nur aus Zahlen.</p>';
 				$output .= '</div>';
 			}
 		}
@@ -139,7 +173,7 @@ else
 	else
 	{
 		$output .= '<div class="w3-panel w3-border w3-border-red w3-text-red">';
-		$output .= '<p>Es wurde keine ArtikelID gesendet.</p>';
+		$output .= '<p>Es wurde keine UserId gesendet.</p>';
 		$output .= '</div>';
 	}
 }
@@ -153,13 +187,23 @@ else
 		?>
 	</head>
 	<body class="gradient-blue">
-		<button class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
-		<div class="w3-content" style="max-width:500px;margin-top:20vh;">
+		<div id="sidebar-overlay" class="overlay">
+			<div class="w3-sidebar w3-animate-left dark">
+				<button onclick="w3.addStyle('#sidebar-overlay','display','none');" class="w3-btn"><i class="fas fa-times fa-2x"></i></button>
+				<div class="w3-container">
+					<p><a class="w3-btn w3-block w3-padding-large active" href="#">Admin</a></p>
+					<p><a class="w3-btn w3-block w3-padding-large" href="/">User</a></p>
+				</div>
+			</div>
+		</div>
+		<button onclick="w3.addStyle('#sidebar-overlay','display','block');" class="w3-btn"><i class="fas fa-bars fa-2x"></i></button>
+		<div class="w3-content" style="max-width:500px;margin-top:15vh;">
 			<div class="w3-center">
 				<div class="w3-bar">
 					<a class="w3-bar-item w3-btn" href="/admin/"><i class="fas fa-home fa-2x"></i></a>
-					<a class="w3-bar-item w3-btn active" href="index.php"><i class="fas fa-user fa-2x"></i></a>
-					<a class="w3-bar-item w3-btn" href="../article/"><i class="fas fa-cube fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn active" href="/admin/user/?s=0&ps=5"><i class="fas fa-user fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn" href="/admin/article/?s=0&ps=5"><i class="fas fa-cube fa-2x"></i></a>
+					<a class="w3-bar-item w3-btn" href="/admin/order/?s=0&ps=5&state=0"><i class="fas fa-list fa-2x"></i></a>
 				</div>
 			</div>
 			<div class="w3-container">
@@ -179,12 +223,13 @@ else
 					<p><a class="w3-btn w3-block w3-padding-large blue" href="add.php">User erstellen <i class="fas fa-user-plus"></i></a></p>
 				</div>
 				<div class="w3-panel w3-white">
-				<?php
-				if(!empty($output))
-				{
-					echo $output;
-				}
-				?>
+					<h4>User anzeigen</h4>
+					<?php
+					if(!empty($output))
+					{
+						echo $output;
+					}
+					?>
 				</div>
 			</div>
 		</div>
